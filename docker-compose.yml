@@ -1,0 +1,58 @@
+# Local development services for supastack.
+# The application itself runs via `pnpm dev`; this file provides the backing
+# Postgres instance plus optional MinIO (S3-compatible storage) so the local
+# golden path works without managed services.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: supastack
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-supastack}
+      POSTGRES_DB: supastack
+    ports:
+      # Host-side tools can connect locally; remote hosts cannot reach Postgres.
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U supastack"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # Optional self-hosted app image (Dockerfile at repo root, Next.js standalone).
+  # `docker compose --profile app up -d` builds and serves the production app.
+  web:
+    build: .
+    ports:
+      # Caddy on this host can reach the upstream at localhost:3000.
+      - "127.0.0.1:3000:8080"
+    # DATABASE_URL inside .env must use the `postgres` service hostname when
+    # running via the app profile — localhost inside a container is the
+    # container itself (docs/agent-setup.md Phase 5).
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles:
+      - app
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-supastack}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-supastack}
+    ports:
+      # Keep the optional API and administration console host-local.
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - minio-data:/data
+    profiles:
+      - storage
+
+volumes:
+  postgres-data:
+  minio-data:

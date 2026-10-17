@@ -1,0 +1,214 @@
+.list {
+  --rail: 168px;
+  --gap: 64px;
+  --gutter-x: var(--gutter, 20px);
+
+  position: relative;
+  list-style: none;
+  max-width: var(--max, 1200px);
+  margin: 0 auto;
+  padding: var(--space-section, 64px) var(--gutter-x);
+}
+
+.list::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--space-section, 64px) + 10px);
+  bottom: calc(var(--space-section, 64px) + 10px);
+  left: calc(var(--gutter-x) + var(--rail) + var(--gap) / 2);
+  width: 1px;
+  background: var(--border);
+}
+
+.entry {
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  column-gap: var(--gap);
+  padding: 44px 0;
+}
+
+.entry::before {
+  content: "";
+  position: absolute;
+  top: 52px;
+  left: calc(var(--rail) + var(--gap) / 2 - 3px);
+  z-index: 1;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--page);
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+/* First entry's dot is accent-filled — keep entries sorted newest first. */
+.entry:first-child::before {
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* Upcoming/roadmap entry — set apart so it never reads as the newest
+   update: dashed spine segment, hollow accent-ring dot, deeper gap. */
+.entry[data-upcoming="true"] {
+  padding-bottom: 84px;
+}
+
+.entry[data-upcoming="true"]::before {
+  background: var(--page);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.entry[data-upcoming="true"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--rail) + var(--gap) / 2);
+  border-left: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--border));
+}
+
+.rail {
+  padding-top: 5px;
+}
+
+.meta {
+  display: block;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.tags {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.tags li {
+  color: var(--muted);
+  font-size: 0.8125rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink, var(--page));
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.3rem, 2vw, 1.55rem);
+  line-height: 1.25;
+  font-weight: 560;
+  letter-spacing: -0.025em;
+  color: var(--text);
+  text-wrap: pretty;
+}
+
+.kind {
+  margin: 9px 0 0;
+  color: var(--accent-text, var(--accent));
+  font-size: 0.8125rem;
+  font-weight: 550;
+}
+
+.summary {
+  margin: 14px 0 0;
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+.points {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.points li {
+  position: relative;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  overflow-wrap: break-word;
+}
+
+.points li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.62em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--text) 38%, transparent);
+}
+
+.items {
+  margin-top: 24px;
+  display: grid;
+  gap: 22px;
+}
+
+.itemTitle {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 560;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.itemBody {
+  margin: 6px 0 0;
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.more {
+  margin: 26px 0 0;
+  color: color-mix(in srgb, var(--muted) 70%, transparent);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 679px) {
+  .list::before,
+  .entry::before,
+  .entry::after {
+    display: none;
+  }
+
+  .entry {
+    grid-template-columns: 1fr;
+    row-gap: 16px;
+    padding: 34px 0;
+  }
+
+  .rail {
+    padding-top: 0;
+  }
+
+  .tags {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+}

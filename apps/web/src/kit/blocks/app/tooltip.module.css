@@ -1,0 +1,85 @@
+.root {
+  position: relative;
+  display: inline-block;
+}
+
+.block {
+  display: block;
+}
+
+.bubble {
+  position: absolute;
+  left: 50%;
+  z-index: 50;
+  box-sizing: border-box;
+  width: max-content;
+  max-width: 260px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--raised);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--text) 14%, transparent);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.45;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease,
+    visibility 0s linear 160ms;
+}
+
+.root[data-side="top"] .bubble {
+  bottom: calc(100% + 8px);
+  transform: translate(-50%, 4px);
+}
+
+.root[data-side="bottom"] .bubble {
+  top: calc(100% + 8px);
+  transform: translate(-50%, -4px);
+}
+
+.root[data-open] .bubble {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition-delay: 0s;
+}
+
+/* 6px caret — a rotated square sharing the bubble fill and hairline. */
+.bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background: var(--raised);
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.root[data-side="top"] .bubble::after {
+  bottom: -4px;
+}
+
+.root[data-side="bottom"] .bubble::after {
+  top: -4px;
+  transform: translateX(-50%) rotate(225deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bubble {
+    transition:
+      opacity 160ms ease,
+      visibility 0s linear 160ms;
+  }
+
+  .root[data-side="top"] .bubble,
+  .root[data-side="bottom"] .bubble,
+  .root[data-open] .bubble {
+    transform: translate(-50%, 0);
+  }
+}

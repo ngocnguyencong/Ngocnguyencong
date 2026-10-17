@@ -1,0 +1,100 @@
+/* OtpInput — single-hidden-input pattern: the real <input> stretches invisible
+   over the slot row so paste/SMS-autofill/selection stay native; the slots are
+   pure visuals. Tokens only. */
+
+.root {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.slots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slot {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 48px;
+  aspect-ratio: 6 / 7;
+  min-height: var(--button-min-height, 44px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--page);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  color: var(--text);
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.slotFilled {
+  background: var(--raised);
+}
+
+.slotActive {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+/* Fake caret bar inside the empty active slot — blinks like a text caret. */
+.caret {
+  width: 2px;
+  height: 1.25em;
+  border-radius: 1px;
+  background: var(--text);
+  animation: otp-caret-blink 1.1s step-end infinite;
+}
+
+@keyframes otp-caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caret {
+    animation: none;
+  }
+}
+
+/* Muted dash between the two halves (even lengths >= 4). */
+.separator {
+  flex: none;
+  width: 10px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--border);
+}
+
+/* The real field — invisible, font >= 16px to dodge iOS focus zoom. */
+.input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  opacity: 0;
+  font-size: 16px;
+}
+
+.root[data-disabled] .slots {
+  opacity: 0.55;
+}

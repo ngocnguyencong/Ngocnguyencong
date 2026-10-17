@@ -1,0 +1,2 @@
+# mobile-purchases-runtime.ts
+Server-only composition of session/active workspace, validated RevenueCat settings, rate limiter, subscriber HTTP request, and source-scoped entitlement upsert. Serialize same-workspace fetch/write with a transaction lock to prevent stale reconciliation races. Webhooks resolve only existing workspaces from validated identities. Provider secrets stay server-only; no receipt contents logged.

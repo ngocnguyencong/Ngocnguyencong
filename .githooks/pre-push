@@ -1,0 +1,17 @@
+#!/bin/sh
+# Mirror the monorepo into supastack-{web,mobile,desktop} when main is pushed.
+# Warn-only: a failed sync never blocks the push (CI re-syncs on main anyway).
+sync=0
+while read -r _local_ref _local_sha remote_ref _remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main) sync=1 ;;
+  esac
+done
+[ "$sync" = "1" ] || exit 0
+[ "${SUBREPO_SYNC_SKIP:-}" = "1" ] && exit 0
+if command -v node >/dev/null 2>&1; then
+  root="$(git rev-parse --show-toplevel)"
+  node "$root/scripts/sync-subrepos.mjs" ||
+    echo "[subrepos] sync failed; push continues and CI re-syncs on main" >&2
+fi
+exit 0

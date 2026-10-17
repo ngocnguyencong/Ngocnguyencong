@@ -1,0 +1,30 @@
+{
+  "name": "@supastack/supadata-sdk",
+  "version": "0.1.0",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "private": true,
+  "description": "Tiny SDK for the supadata analytics surface — a React script component plus a typed server-side API client.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./react": "./src/react.tsx"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "files": [
+    "src",
+    "README.md"
+  ],
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.7",
+    "react": "catalog:",
+    "typescript": "catalog:"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

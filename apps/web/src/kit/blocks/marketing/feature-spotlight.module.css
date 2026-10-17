@@ -1,0 +1,154 @@
+.section {
+  max-width: var(--max, 1200px);
+  margin: 0 auto;
+  padding: var(--space-section, 64px) var(--gutter, 20px);
+}
+
+.header {
+  max-width: 40rem;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 14px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.eyebrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.9rem, 3.6vw, 2.8rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.sub {
+  margin: 14px 0 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: center;
+  margin-top: clamp(32px, 4.5vw, 56px);
+}
+
+.row[data-reverse="true"] .media {
+  order: 2;
+}
+
+.media {
+  min-width: 0;
+}
+
+/* Default frame for whatever the caller drops into the media slot. */
+.media > * {
+  display: block;
+  width: 100%;
+  border-radius: var(--radius-surface, 22px);
+}
+
+.copy {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+
+.heading {
+  margin: 0;
+  font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.description {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--text);
+  text-wrap: pretty;
+}
+
+.support {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.minis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  gap: clamp(24px, 4vw, 48px);
+  list-style: none;
+  margin: clamp(40px, 5vw, 64px) 0 0;
+  padding: 0;
+}
+
+.mini {
+  display: grid;
+  gap: 9px;
+  align-content: start;
+  justify-items: start;
+}
+
+.miniIcon {
+  display: inline-flex;
+  color: var(--accent-text, var(--accent));
+}
+
+.miniIcon svg {
+  height: 1.3rem;
+  width: 1.3rem;
+}
+
+.miniTitle {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.miniBody {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+@media (max-width: 780px) {
+  .row {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  /* Copy leads on narrow screens — same convention as feature-rows. */
+  .media {
+    order: 2;
+  }
+}

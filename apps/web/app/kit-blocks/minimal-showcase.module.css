@@ -1,0 +1,111 @@
+/* Minimal showcase demo styles — page-level CSS feeding block slots, the
+   same way a product's own page module would. Currently: the quiet "live"
+   status strip rendered inside ProductFrame's `status` slot. */
+
+/* ---------- status ticker ---------- */
+
+/* Accent dot, mono label, hairline divider, then states crossfading on an
+   8s loop. The crossfade only exists under `scripting: enabled` +
+   `prefers-reduced-motion: no-preference` — everything else sees the first
+   state statically (the loop is decorative, not information). */
+.ticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  font-size: 0.75rem;
+}
+
+.tickerDot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.tickerLabel {
+  flex: none;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.tickerViewport {
+  display: inline-grid;
+  min-width: 0;
+  max-width: 100%;
+  padding-left: 10px;
+  border-left: 1px solid var(--border);
+  color: var(--content-text, var(--muted));
+  overflow: hidden;
+}
+
+.tickerItem {
+  grid-area: 1 / 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tickerItem:not(:first-child) {
+  opacity: 0;
+}
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  .tickerDot {
+    animation: tickerDotPulse 2.6s ease-in-out infinite;
+  }
+
+  /* Each state holds ~2s, crossfades ~0.33s; --tick-i offsets the loop. */
+  .tickerItem {
+    animation: tickerCycle 8s ease-in-out infinite;
+    animation-delay: calc(var(--tick-i) * 8s / 3);
+  }
+}
+
+@keyframes tickerCycle {
+  0% {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  4% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  29% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  33.333%,
+  100% {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes tickerDotPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  55% {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 0%, transparent);
+  }
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

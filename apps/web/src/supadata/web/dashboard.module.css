@@ -1,0 +1,120 @@
+/* Shared layout for the analytics dashboard pages. */
+
+.pageHead {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 16px;
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.domain {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.livePill {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--raised);
+  color: var(--text);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.livePill:hover {
+  background: var(--section);
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success, #34d399);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .liveDot {
+    animation: livePulse 2s infinite;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--success, #34d399) 50%, transparent);
+  }
+}
+
+@keyframes livePulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--success, #34d399) 45%, transparent);
+  }
+  70% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+/* Side-by-side panels that never force a column wider than the viewport. */
+.panels {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+}
+
+.emptyWrap {
+  display: grid;
+  gap: 20px;
+  justify-items: center;
+  padding: 24px 0;
+}
+
+.emptySteps {
+  margin: 0;
+  padding-left: 1.4em;
+  color: var(--muted);
+  font-size: 0.9rem;
+  display: grid;
+  gap: 6px;
+}
+
+/* Loading skeleton layout mirrors the live page structure. */
+.loading {
+  display: grid;
+  gap: 16px;
+}
+
+.loadingStats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 16px;
+}
+
+.loadingStats > span {
+  min-height: 104px;
+}
+
+.loadingChart {
+  min-height: 260px;
+}
+
+.loadingPanels {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+}
+
+.loadingPanels > span {
+  min-height: 300px;
+}

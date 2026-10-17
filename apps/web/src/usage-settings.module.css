@@ -1,0 +1,102 @@
+.meterRow {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.track {
+  background: var(--section);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  flex: 1;
+  height: 10px;
+  overflow: hidden;
+}
+
+.fill {
+  border-radius: 999px;
+  height: 100%;
+  transition: width 160ms ease;
+}
+
+.ok {
+  background: var(--accent);
+}
+
+.warning {
+  background: var(--warning);
+}
+
+.danger {
+  background: var(--danger);
+}
+
+.meterPercent {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 4ch;
+  text-align: right;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card, 10px);
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.card + .card {
+  margin-top: 16px;
+}
+
+.meterBlock {
+  display: grid;
+  gap: 8px;
+}
+
+.meterHead {
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.meterMeta {
+  color: var(--muted);
+  font-size: 0.9em;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.limitNote {
+  color: var(--muted);
+  font-size: 0.9em;
+  margin: 0;
+}
+
+.manageRow {
+  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 4px;
+  max-width: 100%;
+  width: 12rem;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+}

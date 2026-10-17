@@ -1,0 +1,54 @@
+name: Real provider smoke
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 8 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    if: github.event_name == 'workflow_dispatch' || vars.RUN_NIGHTLY_PROVIDER_SMOKE == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      AI_PROVIDER: openai
+      APP_ENV: test
+      APP_URL: ${{ vars.REAL_SMOKE_APP_URL }}
+      BILLING_PROVIDER: stripe
+      EMAIL_FROM: ${{ vars.REAL_SMOKE_EMAIL_FROM }}
+      EMAIL_PROVIDER: ${{ vars.REAL_SMOKE_EMAIL_PROVIDER || 'resend' }}
+      JOB_PROVIDER: trigger
+      OPENAI_API_KEY: ${{ secrets.REAL_SMOKE_OPENAI_API_KEY }}
+      REAL_SMOKE_AI_MODEL: ${{ vars.REAL_SMOKE_AI_MODEL }}
+      REAL_SMOKE_AI_MODEL_VERSION: ${{ vars.REAL_SMOKE_AI_MODEL_VERSION }}
+      REAL_SMOKE_EMAIL_ALLOWED_DOMAIN: ${{ vars.REAL_SMOKE_EMAIL_ALLOWED_DOMAIN }}
+      REAL_SMOKE_EMAIL_TO: ${{ secrets.REAL_SMOKE_EMAIL_TO }}
+      REAL_SMOKE_STRIPE_MODE: sandbox
+      REAL_SMOKE_TRIGGER_PROJECT_REF: ${{ vars.REAL_SMOKE_TRIGGER_PROJECT_REF }}
+      REAL_SMOKE_TRIGGER_TASK: ${{ vars.REAL_SMOKE_TRIGGER_TASK }}
+      REAL_SMOKE_WORKSPACE_ID: workspace-nightly-provider-smoke
+      RESEND_API_KEY: ${{ secrets.REAL_SMOKE_RESEND_API_KEY }}
+      RUN_REAL_PROVIDER_SMOKE: "true"
+      STRIPE_PRICE_ID: ${{ vars.REAL_SMOKE_STRIPE_PRICE_ID }}
+      STRIPE_SECRET_KEY: ${{ secrets.REAL_SMOKE_STRIPE_RESTRICTED_KEY }}
+      STRIPE_WEBHOOK_SECRET: ${{ secrets.REAL_SMOKE_STRIPE_WEBHOOK_SECRET }}
+      TRIGGER_PROJECT_REF: ${{ vars.REAL_SMOKE_TRIGGER_PROJECT_REF }}
+      TRIGGER_SECRET_KEY: ${{ secrets.REAL_SMOKE_TRIGGER_SECRET_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.REAL_SMOKE_AWS_ACCESS_KEY_ID }}
+      AWS_REGION: ${{ vars.REAL_SMOKE_AWS_REGION }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.REAL_SMOKE_AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.20.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Run capped provider connections
+        run: pnpm smoke:providers

@@ -1,0 +1,847 @@
+.home {
+  background: var(--page);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+:global(html):has(.home),
+:global(body):has(.home) {
+  background: var(--page);
+}
+
+.home ::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+.home a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.home :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.noScriptNav {
+  display: none;
+}
+@media (max-width: 899px) {
+  .home:has(.noScriptNav) .header {
+    position: relative;
+  }
+  .home:has(.noScriptNav) .menuButton {
+    display: none;
+  }
+  .noScriptNav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    padding: 8px var(--gutter) 16px;
+  }
+  .noScriptNav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 0.875rem;
+  }
+}
+
+/* Default margin reset only — kept inside :where() at zero specificity so
+   classed descendants (utility-page .intro children, .prose, .status) always
+   keep their own margins; without it, equal-specificity module rules lose to
+   whichever stylesheet happens to load last and centered titles pin left. */
+:where(.home) h1,
+:where(.home) h2,
+:where(.home) h3,
+:where(.home) p,
+:where(.home) ul,
+:where(.home) ol,
+:where(.home) figure {
+  margin: 0;
+}
+
+.home h1,
+.home h2,
+.home h3 {
+  color: var(--text);
+  letter-spacing: -0.04em;
+}
+
+.home section[id] {
+  scroll-margin-top: calc(var(--header-h) + 16px);
+}
+
+@media (min-width: 768px) {
+  .home {
+    --gutter: 32px;
+  }
+}
+
+@media (min-width: 900px) {
+  .home {
+    --header-h: 76px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home {
+    --gutter: 48px;
+  }
+}
+
+.skip {
+  background: var(--btn);
+  color: var(--btn-text) !important;
+  left: 20px;
+  padding: 12px 18px;
+  position: fixed;
+  top: -80px;
+  z-index: 40;
+}
+
+.skip:focus {
+  top: 12px;
+}
+
+.header {
+  background: color-mix(in srgb, var(--page) 55%, transparent);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid transparent;
+  height: var(--header-h);
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  transition:
+    background-color 300ms var(--ease),
+    border-color 300ms var(--ease);
+  z-index: 30;
+}
+
+.headerScrolled {
+  background: color-mix(in srgb, var(--page) 78%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-bottom-color: var(--border);
+}
+
+@supports not (backdrop-filter: blur(16px)) {
+  .header {
+    background: var(--section);
+  }
+}
+
+.headerInner {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  height: 100%;
+  margin: 0 auto;
+  max-width: var(--max);
+  padding: 0 var(--gutter);
+}
+
+.brand {
+  align-items: center;
+  display: inline-flex;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  gap: 10px;
+  letter-spacing: -0.03em;
+}
+
+.headerCta {
+  display: none;
+  font-size: 0.8125rem;
+  height: 42px;
+  min-height: 42px;
+  padding: 0 16px;
+  white-space: nowrap;
+}
+
+.headerEnd {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-self: end;
+}
+
+.desktopNav {
+  align-items: center;
+  display: none;
+  gap: 28px;
+}
+
+.desktopNav a {
+  color: var(--muted);
+  font-size: 0.875rem;
+  transition: color 220ms var(--ease);
+}
+
+.desktopNav a:hover,
+.desktopNav a:focus-visible,
+.desktopNav a[aria-current="page"] {
+  color: var(--text);
+}
+
+.menuButton,
+.menuClose {
+  display: inline-grid;
+  place-items: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.8125rem;
+  justify-self: end;
+  min-height: 40px;
+  padding: 0 14px;
+  white-space: nowrap;
+  transition:
+    background-color 200ms var(--ease),
+    border-color 200ms var(--ease),
+    color 200ms var(--ease);
+}
+
+.menuButton:hover,
+.menuClose:hover {
+  background: var(--hover-fill);
+  border-color: var(--border-strong);
+}
+
+.menuDialog {
+  background: var(--section);
+  border: 0;
+  border-top: 1px solid var(--border);
+  color: var(--text);
+  height: 100dvh;
+  inset: 0;
+  margin: 0;
+  max-height: none;
+  max-width: none;
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 0;
+  width: 100%;
+}
+
+.menuDialog::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.menuPanel {
+  grid-template-rows: auto 1fr auto;
+  display: grid;
+  gap: 28px;
+  min-height: 100%;
+  padding: 28px var(--gutter) 40px;
+}
+
+.menuPanel .btn {
+  width: 100%;
+}
+
+.menuTop {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.menuTop p {
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.menuClose {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+}
+
+.menuPanel .mobileNav {
+  align-content: center;
+}
+
+.menuPanel .mobileNav a {
+  font-size: clamp(28px, 6vw, 48px);
+}
+
+.mobileNav {
+  display: grid;
+  gap: 4px;
+}
+
+.mobileNav a {
+  border-bottom: 1px solid var(--border);
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+  padding: 14px 0;
+}
+
+@media (min-width: 900px) {
+  .headerInner {
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  .desktopNav {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 8px;
+    column-gap: 20px;
+  }
+
+  .headerInner .headerCta {
+    display: inline-flex;
+    justify-self: end;
+  }
+
+  .menuButton,
+  .menuDialog {
+    display: none;
+  }
+}
+
+.main {
+  padding-top: var(--header-h);
+}
+
+@supports not (backdrop-filter: blur(12px)) {
+  .eyebrow {
+    background: var(--raised);
+  }
+}
+
+.heroActions .btn {
+  width: auto;
+  max-width: 100%;
+}
+
+.btn {
+  align-items: center;
+  border-radius: var(--radius-control);
+  display: inline-flex;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  gap: 8px;
+  height: 50px;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 22px;
+  transition:
+    transform 220ms var(--ease),
+    border-color 220ms var(--ease),
+    background-color 220ms var(--ease);
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    transform: translateY(1px);
+  }
+}
+
+.btn:active {
+  transform: translateY(2px) scale(0.97);
+}
+
+.headerInner .headerCta {
+  display: none;
+}
+
+.home a.btnPrimary,
+.btnPrimary {
+  background: var(--btn);
+  color: var(--btn-text);
+}
+
+.home a.btnPrimary:hover,
+.btnPrimary:hover {
+  background: var(--accent-hover);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .btnSecondary {
+    background: color-mix(in srgb, var(--text) 13%, var(--page));
+  }
+}
+
+.btnPrimary:hover .btnArrow {
+  transform: translateX(3px);
+}
+
+@supports (backdrop-filter: blur(18px)) {
+  .stageFrame {
+    backdrop-filter: blur(18px);
+  }
+}
+
+@supports not (backdrop-filter: blur(18px)) {
+  .stageFrame {
+    background: var(--raised);
+  }
+}
+
+.footer {
+  border-top: 1px solid var(--border);
+  display: grid;
+  gap: 24px;
+  margin: 0 auto;
+  max-width: var(--max);
+  padding: 36px var(--gutter) 56px;
+}
+
+.footerBrand {
+  display: grid;
+  gap: 10px;
+}
+
+.footerBrand p,
+.footer a {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+
+.footer a {
+  transition: color 200ms var(--ease);
+}
+
+.footerNavs {
+  display: grid;
+  gap: 16px;
+}
+
+.footerBar {
+  align-items: center;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+  padding-top: 20px;
+}
+
+.footer a:hover {
+  color: var(--text);
+}
+
+@media (min-width: 640px) {
+  .heroActions .btn {
+    width: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer {
+    align-items: start;
+    grid-template-columns: 1fr auto;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ready .headerInner {
+    animation: headerIn 0.55s var(--ease) both;
+  }
+}
+
+@keyframes headerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes previewIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home *,
+  .home *::before,
+  .home *::after {
+    animation: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
+.home [data-revealed] {
+  transition:
+    opacity 0.7s var(--ease),
+    transform 0.7s var(--ease);
+}
+.home [data-revealed="false"] {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.home [data-revealed="true"] {
+  opacity: 1;
+  transform: translateY(0);
+}
+.home [data-revealed="false"]:focus-within {
+  opacity: 1;
+  transform: none;
+}
+.home[data-paused="true"] *,
+.home[data-paused="true"] *::before,
+.home[data-paused="true"] *::after,
+.home[data-hidden="true"] *,
+.home[data-hidden="true"] *::before,
+.home[data-hidden="true"] *::after,
+.home [data-ambient][data-visible="false"] *,
+.home [data-ambient][data-visible="false"] *::before {
+  animation-play-state: paused !important;
+}
+.btn {
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.2s,
+    box-shadow 0.3s;
+  gap: 16px;
+}
+.btn > span {
+  transition: transform 0.3s var(--ease);
+}
+.btn:hover > span {
+  transform: translate(2px, -2px);
+}
+.menuDialog[data-closing="true"]::backdrop {
+  animation: backdropOut 0.24s both;
+}
+.menuDialog[open]:not([data-closing="true"])::backdrop {
+  animation: backdropIn 0.4s both;
+}
+.menuDialog[open]:not([data-closing="true"]) .mobileNav a {
+  animation: menuLinkIn 0.45s var(--ease) both;
+}
+.mobileNav a:nth-child(2) {
+  animation-delay: 50ms !important;
+}
+.mobileNav a:nth-child(3) {
+  animation-delay: 100ms !important;
+}
+.mobileNav a:nth-child(4) {
+  animation-delay: 150ms !important;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .brand span,
+  .brand [data-hero-wordmark] {
+    animation: markWord 400ms 90ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+@keyframes markWord {
+  from {
+    filter: blur(4px);
+    opacity: 0;
+  }
+  to {
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+@keyframes connectionFlow {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(390%);
+  }
+}
+@keyframes usageReveal {
+  0%,
+  100% {
+    transform: scaleX(0.92);
+  }
+  50% {
+    transform: scaleX(1);
+  }
+}
+@keyframes statusBreathe {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes backdropIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes backdropOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes menuLinkIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 767px) {
+  .home .stageFrame {
+    padding: 0;
+    margin: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home [data-revealed="false"] {
+    opacity: 1;
+    transform: none;
+  }
+  .home [data-revealed],
+  .mark rect,
+  .faqIcon,
+  .btn,
+  .moduleCard {
+    transition: none;
+  }
+  .home *,
+  .home *::before,
+  .home *::after {
+    animation: none !important;
+  }
+}
+
+.home[data-replay] *,
+.home[data-replay] *::before,
+.home[data-replay] *::after {
+  animation: none !important;
+}
+
+.home:not([data-ready="true"]) *,
+.home:not([data-ready="true"]) *::before,
+.home:not([data-ready="true"]) *::after {
+  animation: none !important;
+}
+.home:has([data-travel="true"]) main > section {
+  transform: none !important;
+}
+.home .btn {
+  border-radius: var(--radius-control);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition:
+    background 0.35s,
+    border-color 0.35s,
+    box-shadow 0.35s,
+    transform 0.2s;
+}
+.home .btnPrimary {
+  background: linear-gradient(180deg, #fff, #e7e7e7 48%, #cfcfcf);
+  border: 1px solid #fff;
+  box-shadow: inset 0 1px 0 #ffffffef;
+}
+.home .btnSecondary {
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text) 22%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text) 12%, transparent);
+  backdrop-filter: blur(14px);
+}
+@media (hover: hover) {
+  .home .btnPrimary:hover {
+    box-shadow:
+      inset 0 1px 0 #ffffff80,
+      0 14px 34px color-mix(in srgb, var(--accent) 32%, transparent);
+  }
+  .home .btnSecondary:hover {
+    background: color-mix(in srgb, var(--text) 11%, transparent);
+    border-color: #dce6ffbf;
+  }
+}
+
+/* Motion now only responds to meaningful user interactions. */
+.home .archConnector::after,
+.home .moduleBar i,
+.home .statusDot {
+  animation: none !important;
+}
+.home .moduleCard:hover .moduleVisual span,
+.home .moduleCard:hover .moduleVisual strong,
+.home .archFigure:hover .archSurfaces span {
+  transform: none;
+}
+.home .menuButton {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-control);
+}
+.home .mark rect {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home .btn {
+    transition:
+      transform 150ms cubic-bezier(0.2, 0, 0, 1),
+      background 150ms,
+      border-color 150ms,
+      box-shadow 150ms;
+  }
+  .home .btn:active {
+    transform: translateY(2px) scale(0.97);
+  }
+}
+
+/* Architecture labels describe structure; they should not resemble controls. */
+.home .archBlock {
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--border-strong);
+  border-radius: 0;
+  padding: 24px 0;
+}
+.home .archBlock ul {
+  gap: 12px 24px;
+}
+.home .archBlock li {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  color: var(--muted);
+}
+.home .archSurfaces span {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+.home .archSurfaces {
+  gap: 24px;
+}
+
+.home a.btnPrimary,
+.home .btnPrimary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+.home a.btnPrimary:hover,
+.home .btnPrimary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: var(--accent-ink);
+}
+.home [data-hero-line] em {
+  color: var(--accent-text, var(--accent));
+}
+.home :focus-visible {
+  outline-color: var(--accent);
+}
+.home ::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+/* Primary acquisition action remains visible alongside the compact navigation.
+   Match `.home .menuButton` (44px) — `.btn` height:50px otherwise wins and looks chunky. */
+.home .headerInner .headerCta {
+  display: inline-flex;
+  justify-self: end;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 16px;
+  font-size: 13px;
+}
+@media (max-width: 899px) {
+  .home .headerInner {
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+  }
+  .headerEnd .languageSwitcher {
+    display: none;
+  }
+}
+@media (max-width: 380px) {
+  .home .headerInner {
+    gap: 8px;
+  }
+  .home .headerInner .headerCta {
+    padding: 0 12px;
+    font-size: 12px;
+  }
+}
+
+/* Shared interaction rhythm; authored entrance and theme reveal retain their timing. */
+.home .btn {
+  transition:
+    background-color var(--motion-feedback, 120ms) var(--ease),
+    border-color var(--motion-feedback, 120ms) var(--ease),
+    color var(--motion-feedback, 120ms) var(--ease),
+    box-shadow var(--motion-enter, 180ms) var(--ease),
+    transform var(--motion-feedback, 120ms) var(--ease);
+}
+.home .btn > span {
+  transition: transform var(--motion-feedback, 120ms) var(--ease);
+}
+.home .desktopNav a {
+  transition: color var(--motion-feedback, 120ms) var(--ease);
+}
+@media (hover: none) {
+  .home .btn:hover,
+  .home .btn:hover > span {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home .btn,
+  .home .btn > span,
+  .home .desktopNav a {
+    transition: none;
+  }
+}

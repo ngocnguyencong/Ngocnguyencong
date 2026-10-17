@@ -1,0 +1,32 @@
+:root {
+  color: #152033;
+  background: #f8fafc;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  margin: 0 auto;
+  max-width: 48rem;
+  padding: 4rem 1.5rem;
+}
+
+h1,
+h2 {
+  color: #0f172a;
+}
+
+section {
+  background: #ffffff;
+  border: 1px solid #dbe3ef;
+  border-radius: 0.75rem;
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+}
+
+li + li {
+  margin-top: 0.5rem;
+}

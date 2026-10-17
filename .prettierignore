@@ -1,0 +1,16 @@
+.playwright-mcp/
+pnpm-lock.yaml
+**/drizzle/meta/*.json
+test-results/
+playwright-report/
+.next*/
+.turbo/
+dist/
+coverage/
+tmp/
+.worktrees/
+.superpowers/
+.subrepos/
+.ai/
+**/src-tauri/target/
+**/src-tauri/gen/

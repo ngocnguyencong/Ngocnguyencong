@@ -1,0 +1,260 @@
+.root {
+  display: grid;
+  gap: 1rem;
+  min-inline-size: 0;
+  color: var(--text, inherit);
+  font-family: var(--font-sans, inherit);
+}
+
+.header {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.header h3,
+.panel h3,
+.recordDetail h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.header p,
+.dialogForm p,
+.recordDetail p,
+.sheetContent p {
+  max-inline-size: 65ch;
+  margin: 0;
+  color: var(--muted, currentColor);
+  line-height: 1.5;
+  overflow-wrap: break-word;
+}
+
+.panel {
+  display: grid;
+  gap: 1rem;
+  min-inline-size: 0;
+  padding-block: 0.75rem;
+}
+
+.tableControls,
+.stateControls {
+  display: grid;
+  gap: 1rem;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.tableControls:disabled {
+  opacity: 0.78;
+}
+
+.tableControls:disabled :global(button),
+.tableControls:disabled :global(input),
+.tableControls:disabled :global(select) {
+  cursor: not-allowed;
+}
+
+.tableControls > legend,
+.stateControls > legend {
+  padding: 0;
+  color: var(--muted, currentColor);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.srOnly {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.stateControls {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding-block-start: 0.75rem;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+  color: var(--text, inherit);
+  font-size: 0.875rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.choice input {
+  inline-size: 1rem;
+  block-size: 1rem;
+  margin: 0;
+  accent-color: var(--accent, currentColor);
+}
+
+.filterLabel {
+  display: grid;
+  gap: 0.375rem;
+  min-inline-size: min(100%, 10rem);
+  color: var(--muted, currentColor);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.filterLabel input,
+.textInput {
+  min-block-size: 44px;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--control-border, var(--border, currentColor));
+  border-radius: var(--radius-control, 8px);
+  background: var(--raised, transparent);
+  color: var(--text, inherit);
+  font: inherit;
+}
+
+.filterLabel input:focus-visible,
+.textInput:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--accent, currentColor));
+  outline-offset: 2px;
+}
+
+.actionButton,
+.popoverAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 44px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border, currentColor);
+  border-radius: var(--radius-control, 8px);
+  background: var(--raised, transparent);
+  color: var(--text, inherit);
+  font: inherit;
+  line-height: 1.35;
+  text-align: center;
+  cursor: pointer;
+  transition-property: background-color, border-color, opacity;
+  transition-duration: var(--motion-feedback, 120ms);
+  transition-timing-function: ease-out;
+}
+
+.actionButton:hover:not(:disabled),
+.popoverAction:hover {
+  background: var(--page, transparent);
+}
+
+.actionButton:focus-visible,
+.popoverAction:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--accent, currentColor));
+  outline-offset: 2px;
+}
+
+.actionButton:disabled {
+  color: var(--muted, currentColor);
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.popoverActions {
+  display: grid;
+  gap: 0.5rem;
+  min-inline-size: min(16rem, calc(100vw - 2rem));
+  padding: 0.75rem;
+}
+
+.popoverAction {
+  inline-size: 100%;
+  background: transparent;
+  text-align: start;
+}
+
+.stateMessage {
+  max-inline-size: 65ch;
+  margin: 0;
+  padding-block: 0.75rem;
+  color: var(--muted, currentColor);
+  line-height: 1.5;
+  overflow-wrap: break-word;
+}
+
+.stateMessage[data-state="error"] {
+  color: var(--danger, var(--text, currentColor));
+}
+
+.tableViewport {
+  min-inline-size: 0;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+
+.recordDetail {
+  display: grid;
+  align-content: start;
+  gap: 0.875rem;
+  min-inline-size: 0;
+}
+
+.recordFields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+  gap: 0.75rem 1rem;
+  margin: 0;
+}
+
+.recordFields div {
+  display: grid;
+  gap: 0.25rem;
+  min-inline-size: 0;
+}
+
+.recordFields dt {
+  color: var(--muted, currentColor);
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.recordFields dd {
+  margin: 0;
+  line-height: 1.45;
+  overflow-wrap: break-word;
+}
+
+.dialogForm,
+.sheetContent {
+  display: grid;
+  gap: 1rem;
+}
+
+.dialogActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: 0.75rem;
+}
+
+@media (max-width: 36rem) {
+  .dialogActions {
+    justify-content: stretch;
+  }
+
+  .dialogActions .actionButton {
+    flex: 1 1 8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .actionButton,
+  .popoverAction {
+    transition-duration: 0ms;
+  }
+}

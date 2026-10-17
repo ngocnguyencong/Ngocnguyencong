@@ -1,0 +1,87 @@
+node_modules/
+.pnpm-store/
+.turbo/
+.next/
+dist/
+coverage/
+playwright-report/
+blob-report/
+test-results/
+.expo/
+.env
+.env.*
+!/.env.example
+!/.env.smoke.example
+!/.ai/.env.example.md
+.data/
+*.local
+*.log
+*.tsbuildinfo
+local.db
+local.db-*
+.worktrees/
+.superpowers/
+.subrepos/
+
+# Generated Next.js types (rewritten on every dev/build)
+next-env.d.ts
+
+# Build/export output
+out/
+web-build/
+
+# Expo prebuild artifacts (managed workflow — `expo prebuild` regenerates)
+apps/mobile/ios/
+apps/mobile/android/
+
+# Package/deploy artifacts
+*.tgz
+*.pack
+.vercel/
+.sentryclirc
+
+# Tool caches
+.cache/
+.eslintcache
+.stylelintcache
+.prettiercache
+
+# Signing/local certs
+*.pem
+*.key
+*.keystore
+*.jks
+*.p8
+*.p12
+*.mobileprovision
+
+# Play Store service-account key for eas submit (never commit)
+apps/mobile/secrets/
+
+# Editor/OS noise
+.idea/
+.vscode/
+.vs/
+.codeium/
+.windsurf/
+.DS_Store
+Thumbs.db
+desktop.ini
+*.suo
+*.user
+
+# Agent/tooling local state (keep off GitHub)
+.claude/
+.cursor/
+.impeccable/
+.playwright-mcp/
+tmp/
+
+# Windows reserved device names — `> nul` redirects under Git Bash/MSYS
+# create real files that break git status on Windows
+nul
+con
+prn
+aux
+com[1-9]
+lpt[1-9]

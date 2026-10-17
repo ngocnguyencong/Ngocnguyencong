@@ -1,0 +1,40 @@
+name: Subrepo Sync
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: subrepo-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SUBREPO_SYNC_TOKEN: ${{ secrets.SUBREPO_SYNC_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.20.0
+      - name: Skip when SUBREPO_SYNC_TOKEN is unset
+        if: env.SUBREPO_SYNC_TOKEN == ''
+        run: echo "::warning::SUBREPO_SYNC_TOKEN secret is not set; sub-repo sync skipped."
+      - name: Configure git identity
+        if: env.SUBREPO_SYNC_TOKEN != ''
+        run: |
+          git config --global user.name "supastack-sync[bot]"
+          git config --global user.email "supastack-sync[bot]@users.noreply.github.com"
+      - name: Mirror monorepo into supastack-{web,mobile,desktop}
+        if: env.SUBREPO_SYNC_TOKEN != ''
+        env:
+          SUBREPO_WEB_REMOTE: https://x-access-token:${{ secrets.SUBREPO_SYNC_TOKEN }}@github.com/${{ github.repository_owner }}/supastack-web.git
+          SUBREPO_MOBILE_REMOTE: https://x-access-token:${{ secrets.SUBREPO_SYNC_TOKEN }}@github.com/${{ github.repository_owner }}/supastack-mobile.git
+          SUBREPO_DESKTOP_REMOTE: https://x-access-token:${{ secrets.SUBREPO_SYNC_TOKEN }}@github.com/${{ github.repository_owner }}/supastack-desktop.git
+        run: node scripts/sync-subrepos.mjs

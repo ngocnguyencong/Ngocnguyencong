@@ -1,0 +1,226 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: supastack
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d supastack"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      APP_ENV: test
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/supastack
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.20.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - name: Verify durable submission concurrency
+        run: pnpm exec vitest run apps/web/src/ai-task-submission.integration.test.ts
+        env:
+          TEST_SUBMISSION_DATABASE_URL: postgres://postgres:postgres@localhost:5432/supastack
+      - name: Install Tauri Linux system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libglib2.0-dev \
+            libgtk-3-dev \
+            libwebkit2gtk-4.1-dev \
+            libsoup-3.0-dev \
+            libjavascriptcoregtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libxdo-dev \
+            libssl-dev \
+            pkg-config
+      - run: pnpm check
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+      - name: Verify auth profile persistence and personal workspaces
+        run: pnpm exec vitest run apps/web/src/auth-profile.integration.test.ts
+        env:
+          TEST_AUTH_DATABASE_URL: postgres://postgres:postgres@localhost:5432/supastack
+      - run: pnpm build
+      - name: Install Chromium for Playwright
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Run Chromium acceptance tests
+        run: pnpm exec playwright test --project=chromium
+      - name: Reset the Next dev cache between e2e suites
+        # Both suites spawn `next dev` against the same apps/web/.next, which
+        # already holds `pnpm build` output + the first dev server's compile
+        # state. Turbopack has panicked resuming that graph
+        # (inner_of_upper_lost_follower / aggregation_update.rs); a clean
+        # cache trades a recompile for a deterministic second-server start.
+        run: node scripts/reset-e2e-cache.mjs
+      - name: Run offline production-interface acceptance tests
+        run: pnpm test:e2e:production
+
+  desktop:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.20.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.os }}
+      - name: Install Tauri Linux system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libglib2.0-dev \
+            libgtk-3-dev \
+            libwebkit2gtk-4.1-dev \
+            libsoup-3.0-dev \
+            libjavascriptcoregtk-4.1-dev \
+            libayatana-appindicator3-dev \
+            librsvg2-dev \
+            libxdo-dev \
+            libssl-dev \
+            pkg-config
+          # AppImage bundling needs FUSE; on Ubuntu 24.04 libfuse2 is
+          # renamed libfuse2t64, so fall back when the old name is gone.
+          sudo apt-get install -y fuse libfuse2 || sudo apt-get install -y fuse libfuse2t64
+      - name: Run desktop Rust tests and boot script check
+        run: pnpm --filter @supastack/desktop test
+      - name: Build the Tauri installer bundle
+        env:
+          # linuxdeploy's bundled strip chokes on .relr.dyn sections of
+          # ubuntu-24.04's newer glibc; NO_STRIP skips it (unused elsewhere).
+          NO_STRIP: "true"
+        run: pnpm --filter @supastack/desktop build
+
+  windows-fresh-setup:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    env:
+      NODE_OPTIONS: --max-old-space-size=4096
+      NEXT_TELEMETRY_DISABLED: "1"
+      EXPO_NO_TELEMETRY: "1"
+      EXPO_OFFLINE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.20.0
+      - name: Prepare non-elevated Corepack shims
+        shell: pwsh
+        run: |
+          if (-not (Get-Command corepack -ErrorAction SilentlyContinue)) {
+            npm install --global corepack
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          $setupShimDir = Join-Path $env:LOCALAPPDATA "supastack\corepack-shims"
+          New-Item -ItemType Directory -Path $setupShimDir -Force | Out-Null
+          corepack enable --install-directory $setupShimDir
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $setupShimDir | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - run: corepack pnpm install --frozen-lockfile
+      - name: Copy the documented local configuration
+        shell: pwsh
+        run: |
+          Copy-Item .env.example .env
+          Copy-Item .env.example apps/web/.env.local
+      - name: Verify the complete clean-checkout local workflow
+        run: corepack pnpm verify:local
+      - name: Upload browser failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-browser-failure
+          path: test-results/
+          if-no-files-found: ignore
+
+  dependency-license-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.20.0
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Verify license checker
+        run: node --test scripts/check-dependency-licenses.test.mjs
+      - name: Check installed dependency licenses
+        run: pnpm licenses list --json --recursive | node scripts/check-dependency-licenses.mjs
+
+  security-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.19.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.20.0
+      - name: Verify installed dependency backports
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm exec vitest run tests/dependency-security.test.ts tests/dependency-audit.test.ts
+      - name: Audit locked dependencies and verify backport policy
+        shell: bash
+        run: |
+          audit_status=0
+          pnpm audit --json > "$RUNNER_TEMP/dependency-audit.json" || audit_status=$?
+          if [ "$audit_status" -gt 1 ]; then exit "$audit_status"; fi
+          node scripts/check-dependency-audit.mjs --report "$RUNNER_TEMP/dependency-audit.json"
+      - name: Install Gitleaks CLI
+        shell: bash
+        run: |
+          curl --fail --location --silent --show-error --retry 3 \
+            https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz \
+            --output "$RUNNER_TEMP/gitleaks.tar.gz"
+          echo "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  $RUNNER_TEMP/gitleaks.tar.gz" | sha256sum --check -
+          tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP" gitleaks
+      - name: Scan repository history for secrets
+        run: |
+          "$RUNNER_TEMP/gitleaks" git --redact --verbose .

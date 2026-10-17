@@ -1,0 +1,70 @@
+/* A <legend> is painted on the fieldset's border edge — it is never a
+   grid/flex item, so container `gap` cannot space it from the controls.
+   Keep the fieldset plain and space the legend with its own margin. */
+.root {
+  border: 0;
+  margin: 0;
+  min-inline-size: 0;
+  padding: 0;
+}
+
+.legend {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 0 0 10px;
+  padding: 0;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.option {
+  cursor: pointer;
+  flex: 1 1 auto;
+  min-width: 0;
+  position: relative;
+}
+
+.input {
+  inset: 0;
+  opacity: 0;
+  position: absolute;
+}
+
+.pill {
+  align-items: center;
+  background: var(--raised, transparent);
+  border: 1px solid var(--border-strong, var(--border));
+  border-radius: 999px;
+  color: var(--text);
+  display: inline-flex;
+  font-size: 0.88rem;
+  font-weight: 500;
+  justify-content: center;
+  min-height: var(--control-min-height, 42px);
+  padding: 0 18px;
+  transition:
+    background-color 150ms,
+    border-color 150ms,
+    color 150ms;
+  width: 100%;
+}
+
+.option:hover .pill {
+  border-color: color-mix(in srgb, var(--text) 38%, transparent);
+}
+
+.option:has(.input:checked) .pill {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink, var(--page));
+}
+
+.input:focus-visible + .pill {
+  outline: 3px solid color-mix(in srgb, var(--accent) 70%, var(--text));
+  outline-offset: 2px;
+}

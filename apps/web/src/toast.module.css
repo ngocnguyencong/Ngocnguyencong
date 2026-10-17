@@ -1,0 +1,141 @@
+/* Toast viewport + item chrome. The data-toast-style axis (presets.ts) re-skins
+   .item via html-level attribute selectors — pack tokens come from <html>, so
+   the viewport can mount at body level outside .app-theme/.marketing-theme. */
+
+.viewport {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 90;
+  display: grid;
+  gap: 10px;
+  width: min(420px, calc(100vw - 32px));
+  pointer-events: none;
+  max-height: calc(100dvh - 40px);
+  overflow-y: auto;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius-control, 12px);
+  pointer-events: auto;
+  animation: toast-in var(--motion-enter, 180ms) var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+  transition:
+    opacity var(--motion-exit, 120ms),
+    transform var(--motion-exit, 120ms);
+}
+
+.item[data-state="closed"] {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+/* solid — filled card on the raised surface (default) */
+.item,
+html[data-toast-style="solid"] .item {
+  background: var(--raised);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--page) 55%, transparent);
+}
+
+/* soft — translucent tinted card with a blurred backdrop */
+html[data-toast-style="soft"] .item {
+  background: color-mix(in srgb, var(--raised) 82%, transparent);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--page) 40%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* outline — page fill, strong border */
+html[data-toast-style="outline"] .item {
+  background: var(--page);
+  border: 1.5px solid var(--border-strong);
+  box-shadow: none;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    animation: none;
+    transition: none;
+  }
+}
+
+.icon {
+  flex: none;
+}
+
+.info .icon {
+  color: var(--info, var(--muted));
+}
+
+.success .icon {
+  color: var(--success, var(--accent));
+}
+
+.error .icon {
+  color: var(--danger);
+}
+
+.message {
+  flex: 1;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+.close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: -8px -8px -8px 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control, 12px);
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    background-color var(--motion-feedback, 120ms) var(--ease),
+    color var(--motion-feedback, 120ms) var(--ease);
+}
+
+@media (hover: hover) {
+  .close:hover {
+    background: var(--hover-fill, color-mix(in srgb, var(--text) 8%, transparent));
+    color: var(--text);
+  }
+}
+.close:active {
+  background: var(--press-fill);
+  color: var(--text);
+}
+@media (prefers-reduced-motion: reduce) {
+  .close {
+    transition: none;
+  }
+}
+
+.close:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

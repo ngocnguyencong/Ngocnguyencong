@@ -1,0 +1,23 @@
+{
+  "name": "@supastack/jobs",
+  "version": "0.1.0",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit false --outDir dist --declaration",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "dependencies": {
+    "@supastack/db": "workspace:*",
+    "@trigger.dev/sdk": "4.5.16",
+    "drizzle-orm": "0.45.2"
+  },
+  "devDependencies": {
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "name": "noah-supastack",
+  "version": "0.1.0",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "build": "node scripts/run-turbo.mjs run build --filter=!@supastack/desktop",
+    "build:desktop": "turbo run build --filter=@supastack/desktop",
+    "dev": "turbo run dev --parallel --filter=!@supastack/desktop",
+    "dev:desktop": "turbo run dev --parallel --filter=@supastack/web --filter=@supastack/desktop",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright install chromium && playwright test",
+    "test:e2e:production": "playwright install chromium && playwright test --config playwright.production.config.ts",
+    "smoke:providers": "vitest run --config vitest.real.config.ts",
+    "typecheck": "turbo run typecheck",
+    "typecheck:local": "turbo run typecheck --filter=!@supastack/desktop",
+    "typecheck:desktop": "turbo run typecheck --filter=@supastack/desktop",
+    "lint": "eslint .",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "check": "corepack pnpm lint && corepack pnpm typecheck && corepack pnpm test && corepack pnpm format:check",
+    "check:local": "corepack pnpm lint && corepack pnpm typecheck:local && corepack pnpm test && corepack pnpm format:check",
+    "verify:local": "corepack pnpm check:local && corepack pnpm build && corepack pnpm test:e2e && node scripts/reset-e2e-cache.mjs && corepack pnpm test:e2e:production",
+    "verify:desktop": "corepack pnpm typecheck:desktop && turbo run test --filter=@supastack/desktop && corepack pnpm build:desktop",
+    "changeset": "changeset",
+    "jobs:tick": "node scripts/scheduler-tick.mjs",
+    "version:packages": "changeset version",
+    "prepare": "git config core.hooksPath .githooks || exit 0",
+    "setup": "node scripts/setup.mjs",
+    "sync:subrepos": "node scripts/sync-subrepos.mjs",
+    "supabase:provision": "node scripts/supabase-provision.mjs",
+    "supabase:doctor": "node scripts/supabase-doctor.mjs"
+  },
+  "devDependencies": {
+    "@changesets/cli": "3.0.1",
+    "@eslint/js": "9.39.5",
+    "@playwright/test": "1.62.1",
+    "@types/node": "22.20.1",
+    "@vitest/coverage-v8": "4.1.11",
+    "eslint": "9.39.5",
+    "prettier": "3.9.6",
+    "turbo": "2.10.12",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.69.0",
+    "vitest": "4.1.11"
+  }
+}

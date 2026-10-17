@@ -1,0 +1,1 @@
+ALTER TABLE "content_entry" ADD COLUMN "required_entitlement" varchar(100);

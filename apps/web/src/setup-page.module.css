@@ -1,0 +1,159 @@
+.shell {
+  margin: 0 auto;
+  max-width: 720px;
+  padding: 48px 24px;
+}
+
+.summary {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card, 10px);
+  display: grid;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 16px;
+}
+
+.summaryLine {
+  margin: 0;
+}
+
+.meterRow {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.track {
+  background: var(--section);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  flex: 1;
+  height: 10px;
+  overflow: hidden;
+}
+
+.fill {
+  background: var(--accent);
+  border-radius: 999px;
+  height: 100%;
+  transition: width 160ms ease;
+}
+
+.meterPercent {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 4ch;
+  text-align: right;
+}
+
+.group {
+  margin-bottom: 24px;
+}
+
+.groupTitle {
+  margin: 0 0 8px;
+}
+
+.checkList {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card, 10px);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  padding: 12px 16px;
+}
+
+.row + .row {
+  border-top: 1px solid var(--border);
+}
+
+.rowMain {
+  align-items: flex-start;
+  display: flex;
+  gap: 10px;
+}
+
+.statusIcon {
+  align-items: center;
+  display: inline-flex;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.iconReady {
+  color: var(--accent);
+}
+
+.iconAction {
+  color: var(--danger);
+}
+
+.iconDemo {
+  color: var(--warning);
+}
+
+.iconOptional {
+  color: var(--muted);
+}
+
+.rowLabel {
+  font-weight: 600;
+  margin: 0;
+}
+
+.rowDetail {
+  color: var(--muted);
+  font-size: 0.9em;
+  margin: 2px 0 0;
+}
+
+.fixLine {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.fixCode {
+  background: var(--section);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.85em;
+  padding: 2px 6px;
+  word-break: break-all;
+}
+
+.commandWrap {
+  align-items: center;
+  display: inline-flex;
+  gap: 4px;
+}
+
+.copyButton {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 0.8em;
+  padding: 2px 8px;
+}
+
+.copyButton:hover {
+  border-color: var(--control-border, var(--border));
+  color: var(--text);
+}
+
+.docLink {
+  font-size: 0.85em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+}

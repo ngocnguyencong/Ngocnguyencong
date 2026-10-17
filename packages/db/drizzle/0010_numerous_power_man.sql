@@ -1,0 +1,1 @@
+ALTER TABLE "job_schedule" ALTER COLUMN "workspace_id" DROP NOT NULL;

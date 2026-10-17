@@ -1,0 +1,152 @@
+/* Landing vignette styles — flat, hairline, token-only (matches minimal grammar). */
+
+.anchor {
+  scroll-margin-top: 80px;
+}
+
+/* --- hero product frame contents ----------------------------------------- */
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  text-align: left;
+}
+
+.previewFoot {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.frameBrand {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.frameLink {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+
+.frameLink:hover {
+  color: var(--text);
+}
+
+/* --- shared vignette rows ------------------------------------------------- */
+
+.vigRows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.vigRow {
+  align-items: center;
+  display: grid;
+  font-size: 13px;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr) auto;
+}
+
+.vigLabel {
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vigTrack {
+  background: var(--section);
+  border-radius: 999px;
+  display: block;
+  height: 6px;
+  overflow: hidden;
+}
+
+.vigFill {
+  background: var(--accent);
+  border-radius: 999px;
+  display: block;
+  height: 100%;
+}
+
+.vigValue {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.vigMetaText {
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* --- live visitors --------------------------------------------------------- */
+
+.vigLive {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.vigLiveRow {
+  align-items: center;
+  display: grid;
+  font-size: 13px;
+  gap: 10px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.vigDot {
+  background: var(--success);
+  border-radius: 50%;
+  display: inline-block;
+  height: 6px;
+  width: 6px;
+}
+
+/* --- funnel steps ---------------------------------------------------------- */
+
+.vigFunnel {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.vigFunnelStep {
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  font-size: 13px;
+  gap: 10px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  padding: 9px 0;
+}
+
+.vigFunnelStep:last-child {
+  border-bottom: 0;
+}
+
+.vigStepNo {
+  align-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  color: var(--muted);
+  display: inline-flex;
+  font-size: 10px;
+  height: 18px;
+  justify-content: center;
+  width: 18px;
+}

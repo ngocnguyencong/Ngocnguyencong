@@ -1,0 +1,13 @@
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  oxc: {
+    jsx: {
+      runtime: "automatic",
+    },
+  },
+  test: {
+    include: ["app/**/*.test.{ts,tsx}", "src/**/*.test.{ts,tsx}"],
+    passWithNoTests: false,
+  },
+});

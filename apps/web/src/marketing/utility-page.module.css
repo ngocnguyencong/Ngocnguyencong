@@ -1,0 +1,201 @@
+.main {
+  margin: 0 auto;
+  max-width: var(--max);
+  padding: calc(var(--header-h) + 66px) var(--gutter) 88px;
+}
+
+.intro {
+  text-align: center;
+  margin: 0 auto 52px;
+  max-width: 46rem;
+}
+
+.intro h1 {
+  margin: 0 auto;
+  text-wrap: balance;
+  font-size: clamp(2.25rem, 4vw, 3rem);
+  font-weight: 550;
+  line-height: 1.15;
+}
+
+.intro p,
+.intro time {
+  color: var(--muted);
+  margin: 14px auto 0;
+  font-size: 1.0625rem;
+  max-width: 55ch;
+}
+
+.prose {
+  display: grid;
+  gap: 34px;
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+.prose section + section {
+  padding-top: 34px;
+  border-top: 1px solid var(--border);
+}
+
+.prose section h2,
+.panel h2 {
+  font-size: 1.2rem;
+  font-weight: 550;
+  letter-spacing: -0.02em;
+  margin-bottom: 10px;
+}
+
+.prose section p,
+.empty,
+.panel p {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  text-wrap: pretty;
+}
+
+/* Bullet lists inside legal prose (license "can/can't" sections). */
+.prose section ul {
+  margin: 12px 0 0;
+  padding-inline-start: 1.35em;
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+.prose section li {
+  padding-inline-start: 4px;
+  text-wrap: pretty;
+}
+
+.prose section li::marker {
+  color: var(--accent-text, var(--accent));
+}
+
+.forms {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  align-items: start;
+  max-width: 54rem;
+  margin: 0 auto;
+}
+
+.panel {
+  display: grid;
+  gap: 6px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--raised);
+}
+
+.panel .form {
+  margin-top: 14px;
+}
+
+.form {
+  display: grid;
+  gap: 16px;
+}
+
+.form label {
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.form input,
+.form textarea {
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--page);
+  color: var(--text);
+  font: inherit;
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.form input:hover,
+.form textarea:hover {
+  border-color: var(--border-strong);
+}
+
+.form input:focus-visible,
+.form textarea:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.form textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.form button {
+  justify-self: start;
+  min-height: 44px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--btn);
+  color: var(--btn-text);
+  font: inherit;
+  font-weight: 550;
+  cursor: pointer;
+  transition:
+    background-color 140ms var(--ease),
+    transform 140ms var(--ease);
+}
+.form button:hover {
+  background: color-mix(in srgb, var(--btn) 88%, var(--page));
+  transform: translateY(-1px);
+}
+.form button:active {
+  transform: translateY(0);
+}
+
+.status {
+  margin: 0 auto 28px;
+  max-width: 54rem;
+  padding: 13px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--raised);
+  color: var(--text);
+  font-size: 0.9375rem;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .forms {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .main {
+    padding-top: calc(var(--header-h) + 40px);
+    padding-bottom: 56px;
+  }
+  .intro {
+    margin-bottom: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form button,
+  .form input,
+  .form textarea {
+    transition: none;
+  }
+}

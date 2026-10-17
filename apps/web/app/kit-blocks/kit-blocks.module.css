@@ -1,0 +1,137 @@
+.page {
+  min-height: 100dvh;
+  padding: 48px 24px 96px;
+  background: var(--page);
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+
+.header {
+  display: grid;
+  gap: 12px;
+  max-width: 56rem;
+  margin: 0 auto 48px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.03em;
+}
+
+.header p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.header code,
+.blockPath {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.group {
+  display: grid;
+  gap: 20px;
+  max-width: 72rem;
+  margin: 0 auto 48px;
+}
+
+/* Demo content may legitimately exceed the column (min-content); let grid
+   items shrink so the page never scrolls sideways — .blockCard clips. */
+.group > * {
+  min-width: 0;
+}
+
+.groupTitle {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.blockCard {
+  overflow: clip;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card, 16px);
+  background: var(--section);
+}
+
+.blockHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.blockName {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.blockDesc {
+  margin: 2px 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.blockPath {
+  color: var(--muted);
+}
+
+.blockPad {
+  padding: 24px;
+}
+
+.ambientGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 16px;
+}
+
+.ambientCell {
+  position: relative;
+  height: 180px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card, 16px);
+  background: var(--page);
+}
+
+.ambientCell figcaption {
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.showcaseNote {
+  margin: 0;
+  max-width: 56rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.showcaseNote code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+.showcaseFrame {
+  overflow: clip;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}

@@ -1,0 +1,138 @@
+.card {
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card, 16px);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.title {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.inlineForm {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.input {
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: var(--section);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 8px);
+  padding: 7px 10px;
+  min-width: 140px;
+}
+
+.input:focus-visible {
+  outline: 2px solid var(--focus-ring, var(--accent));
+  outline-offset: 1px;
+}
+
+.btn {
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--btn-text);
+  background: var(--btn);
+  border: 1px solid var(--btn);
+  border-radius: var(--radius-md, 8px);
+  padding: 7px 14px;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.btnGhost {
+  font: inherit;
+  font-size: 12px;
+  color: var(--muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 8px);
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.btnGhost:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text);
+  margin: 10px 0;
+}
+
+.error {
+  color: var(--danger, #f87171);
+  font-size: 13px;
+}
+.note {
+  color: var(--muted);
+  font-size: 13px;
+}
+.note code {
+  color: var(--text);
+}
+.dim {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.stepNum {
+  color: var(--muted);
+  font-size: 12px;
+  width: 16px;
+  text-align: right;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+
+.rowActions {
+  display: inline-flex;
+  gap: 6px;
+}

@@ -1,0 +1,27 @@
+# Pin LF for all text so Windows clones (core.autocrlf=true) still satisfy
+# Prettier's endOfLine "lf" in `pnpm format:check`.
+* text=auto eol=lf
+
+# Batch scripts only run in cmd.exe when checked out CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.icns binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.eot binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.wasm binary
+*.mp4 binary
+*.webm binary
+*.mov binary

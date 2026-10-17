@@ -1,0 +1,159 @@
+{
+  "repo_notes": [
+    {
+      "content": "supastack is a provider-neutral AI SaaS starter kit shipped as a pnpm + turbo monorepo. apps/web is a Next.js 16 application (App Router, strict TypeScript) that carries the whole product surface; apps/mobile is an Expo app that consumes the web app's BFF routes; apps/desktop is a Tauri webview shell over the web app; apps/docs holds documentation tooling. The 15 packages under packages/ are framework-neutral contracts and adapters selected at runtime by environment switches: AI_PROVIDER (fake|openai|anthropic|openai-compatible|openrouter), AGENT_FRAMEWORK (ai-sdk|mastra|langgraph|openai-agents), BILLING_PROVIDER (local|stripe|lemonsqueezy|creem|polar|whop|paddle|dodo|paypal), EMAIL_PROVIDER (local|resend|ses|postmark|sendgrid|mailgun|smtp|brevo), JOB_PROVIDER (local|trigger), STORAGE_PROVIDER (memory|s3), CUSTOM_DOMAINS_PROVIDER (off|local|cloudflare), AUTH_PROVIDER (better-auth|authjs). Every user-owned record is scoped by workspaceId — never trust a workspace id from the client. Provider secrets stay server-only. The kit ships a customization library (theme packs, design styles, layout variants, copyable kit blocks, agent prompts) rather than a fixed look. Workspace tools are defined once in a shared registry and exposed to both agent runners (@supastack/agents) and the stateless MCP server at /api/mcp. Billing adapters all implement one BFF contract over a shared entitlement ledger. Emphasize the env-switch provider pattern, workspace scoping, and the web app as the source of truth that mobile and desktop project.",
+      "author": "supastack"
+    }
+  ],
+  "pages": [
+    {
+      "title": "Architecture Overview",
+      "purpose": "Monorepo layout (apps + packages), the env-switch provider pattern, workspace scoping, and how web/mobile/desktop relate."
+    },
+    {
+      "title": "Web Application",
+      "purpose": "apps/web: Next.js 16 App Router structure, server composition root, server actions, route groups, and locale-prefixed routing.",
+      "parent": "Architecture Overview"
+    },
+    {
+      "title": "Mobile Application",
+      "purpose": "apps/mobile: Expo app structure, navigation, and how it consumes the web app's API surface.",
+      "parent": "Architecture Overview"
+    },
+    {
+      "title": "Desktop Shell",
+      "purpose": "apps/desktop: Tauri webview over the web app, Rust-side window/tray/hotkey behavior, SUPASTACK_APP_URL selection.",
+      "parent": "Architecture Overview"
+    },
+    {
+      "title": "Shared Packages",
+      "purpose": "packages/* overview: framework-neutral contracts, adapter pattern, and which env switch selects each package's implementation.",
+      "parent": "Architecture Overview"
+    },
+    {
+      "title": "Operations & Deployment",
+      "purpose": "Deployment topology, environment configuration, scripts, and operational tooling at the repo root.",
+      "parent": "Architecture Overview"
+    },
+    {
+      "title": "Auth & Sessions",
+      "purpose": "Better Auth/Auth.js engines (packages/auth), OAuth providers, OTP, session handling, dynamic trusted origins for custom domains, workspace membership.",
+      "parent": "Web Application"
+    },
+    {
+      "title": "AI Routing, Budgets & BYOK",
+      "purpose": "ModelRouter, catalog aliases (fast/smart/cheap), entitlement and budget enforcement, BYOK key vault with encrypted provider credentials (packages/ai).",
+      "parent": "Web Application"
+    },
+    {
+      "title": "Public REST API & API Keys",
+      "purpose": "/api/v1 BFF, sk_ API keys, scope model, rate limiting, idempotency keys, error envelope (packages/api contracts).",
+      "parent": "Web Application"
+    },
+    {
+      "title": "MCP Server",
+      "purpose": "POST /api/mcp: stateless Streamable HTTP MCP endpoint, sk_-key-only auth, scope-filtered workspace tools, shared tool registry.",
+      "parent": "Public REST API & API Keys"
+    },
+    {
+      "title": "Billing Providers & Entitlement Ledger",
+      "purpose": "Checkout/portal flows, webhook verification per provider, and the shared entitlement ledger that gates paid features.",
+      "parent": "Web Application"
+    },
+    {
+      "title": "Settings & Workspace Administration",
+      "purpose": "Settings sections (general, appearance, security, billing, members, domains, notifications, developers, audit), org actions, admin surface.",
+      "parent": "Web Application"
+    },
+    {
+      "title": "Custom Domains & White Label",
+      "purpose": "Cloudflare for SaaS custom hostnames, workspace_domain records, DNS/DCV verification, request branding, trusted origins.",
+      "parent": "Web Application"
+    },
+    {
+      "title": "Theming, Blocks & Layouts",
+      "purpose": "Theme packs, design styles, density/radius/font axes, layout variants, the copyable kit block library, marketing theme mode.",
+      "parent": "Web Application"
+    },
+    {
+      "title": "SEO & Marketing Surface",
+      "purpose": "Metadata, sitemap/robots, JSON-LD, OG image routes, docs/blog resources, apps/docs tooling.",
+      "parent": "Web Application"
+    },
+    {
+      "title": "Internationalization",
+      "purpose": "Locale routing (en/de/es/fr), dictionary structure in packages/i18n, localized emails and page copy.",
+      "parent": "Web Application"
+    },
+    {
+      "title": "Email & Transactional Delivery",
+      "purpose": "Transactional sender contract, provider transports via the email SDK, React Email templates, mail preview, separation from outreach.",
+      "parent": "Web Application"
+    },
+    {
+      "title": "Webhooks & Outbound Events",
+      "purpose": "Outbound webhook registry, event types, signing, delivery records, workspace-scoped subscriptions.",
+      "parent": "Web Application"
+    },
+    {
+      "title": "Server Configuration",
+      "purpose": "packages/config: zod-parsed env schema, per-provider credential requirements, public vs server config separation.",
+      "parent": "Shared Packages"
+    },
+    {
+      "title": "Database, Schema & Migrations",
+      "purpose": "packages/db: Drizzle schema, workspace-scoped tables, migrations, postgresClientOptions pooler handling.",
+      "parent": "Shared Packages"
+    },
+    {
+      "title": "AI Provider Layer",
+      "purpose": "packages/ai: provider contract, fake/openai/anthropic/openai-compatible/openrouter implementations, usage accounting.",
+      "parent": "Shared Packages"
+    },
+    {
+      "title": "Agent Framework Adapters",
+      "purpose": "packages/agents: shared tool definitions, ToolContext, and the ai-sdk/mastra/langgraph/openai-agents adapters loaded lazily.",
+      "parent": "Shared Packages"
+    },
+    {
+      "title": "Billing Adapter Contracts",
+      "purpose": "packages/billing: the provider-neutral checkout/portal/webhook contract implemented by stripe, lemonsqueezy, creem, polar, and whop.",
+      "parent": "Shared Packages"
+    },
+    {
+      "title": "Email Transports",
+      "purpose": "packages/email: EmailSender contract, resend/ses senders, and email-sdk transports for postmark/sendgrid/mailgun/smtp/brevo with telemetry off.",
+      "parent": "Shared Packages"
+    },
+    {
+      "title": "Jobs & Background Work",
+      "purpose": "packages/jobs: JobRunner contract (enqueue/status/cancel only), local runner, Trigger.dev adapter semantics.",
+      "parent": "Shared Packages"
+    },
+    {
+      "title": "Object Storage",
+      "purpose": "packages/storage: workspace-prefixed object keys, memory and S3-compatible adapters, Supabase/MinIO endpoint support.",
+      "parent": "Shared Packages"
+    },
+    {
+      "title": "UI Packages & Design Tokens",
+      "purpose": "packages/design-tokens, ui-web, ui-native: shared tokens and component primitives consumed by web and mobile.",
+      "parent": "Shared Packages"
+    },
+    {
+      "title": "Observability",
+      "purpose": "packages/observability plus Sentry/PostHog wiring: error capture, analytics boundaries, secret redaction.",
+      "parent": "Shared Packages"
+    },
+    {
+      "title": "Mobile BFFs & Native Purchases",
+      "purpose": "Mobile-specific backend-for-frontend routes and the RevenueCat boundary — native purchases never hit Stripe Checkout.",
+      "parent": "Mobile Application"
+    },
+    {
+      "title": "Supabase Deployment",
+      "purpose": "supabase:provision and supabase:doctor scripts, pooler modes and prepared statements, RLS hardening, cloud and self-hosted paths.",
+      "parent": "Operations & Deployment"
+    }
+  ]
+}

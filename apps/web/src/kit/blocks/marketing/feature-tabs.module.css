@@ -1,0 +1,303 @@
+/* Kit block styles — token consumers only. Works on .marketing-theme and
+   .app-theme surfaces; every value remaps when packs or presets change. */
+
+.section {
+  max-width: var(--max, 1200px);
+  margin: 0 auto;
+  padding: var(--space-section, 64px) var(--gutter, 20px);
+}
+
+.header {
+  display: grid;
+  gap: 12px;
+  max-width: 40rem;
+  margin: 0 auto var(--space-room, 32px);
+  text-align: center;
+}
+
+.heading {
+  margin: 0;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  font-weight: 500;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.sub {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+/* ---------- layout: tab rail left, panel right ---------- */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(180px, 260px) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 48px);
+  align-items: start;
+}
+
+/* ---------- tab strip ---------- */
+
+.tablist {
+  display: grid;
+  gap: 2px;
+  align-content: start;
+  border-left: 1px solid var(--border);
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--button-min-height, 44px);
+  margin-left: -1px;
+  padding: 10px 16px 10px 15px;
+  border: 0;
+  border-radius: 0 var(--radius-control, 12px) var(--radius-control, 12px) 0;
+  background: none;
+  font: 500 0.92rem/1.45 var(--font-sans);
+  color: var(--muted);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    color var(--motion-feedback, 120ms),
+    background-color var(--motion-feedback, 120ms);
+}
+
+.tab:hover {
+  color: var(--text);
+  background: var(--hover-fill);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.tab[data-active="true"] {
+  color: var(--text);
+}
+
+/* Accent tick laid over the rail hairline. */
+.tab[data-active="true"]::before {
+  content: "";
+  position: absolute;
+  top: 9px;
+  bottom: 9px;
+  left: 0;
+  width: 2px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.tabIcon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  transition: color var(--motion-feedback, 120ms);
+}
+
+.tabIcon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.tab[data-active="true"] .tabIcon {
+  color: var(--accent-text, var(--accent));
+}
+
+/* ---------- panels ---------- */
+
+.panels {
+  min-width: 0;
+}
+
+.panel:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+  border-radius: var(--radius-control, 12px);
+}
+
+.panelGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: clamp(24px, 4vw, 56px);
+  align-items: center;
+}
+
+.copy {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.description {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.points {
+  display: grid;
+  gap: 10px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.points li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.media {
+  min-width: 0;
+}
+
+/* Default visual when the caller supplies no media — a quiet token-tinted
+   surface inside the shared product frame. */
+.mediaPlaceholder {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  background: var(--section);
+}
+
+.mediaIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card, 16px);
+  background: var(--raised);
+  color: var(--muted);
+}
+
+.mediaIcon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ---------- fail open + motion ---------- */
+
+/* Inactive panels hide only where scripting can flip them back: no-JS
+   readers always get every panel's text (same contract as scroll-reveal). */
+@media (scripting: enabled) {
+  .panel:not([data-active="true"]) {
+    display: none;
+  }
+}
+
+/* Panel swap entrance — 180ms shared enter token, CSS-only, replays each
+   time a panel becomes active. Reduced-motion visitors get an instant swap. */
+@media (prefers-reduced-motion: no-preference) {
+  .panel[data-active="true"] {
+    animation: featureTabPanelIn var(--motion-enter, 180ms)
+      var(--ease, cubic-bezier(0.16, 1, 0.3, 1)) both;
+  }
+}
+
+@keyframes featureTabPanelIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- narrow: horizontal tab strip over the panel ---------- */
+
+@media (max-width: 860px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .tablist {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    border-left: 0;
+    border-bottom: 1px solid var(--border);
+    scrollbar-width: none;
+  }
+
+  .tablist::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    flex: none;
+    margin-left: 0;
+    margin-bottom: -1px;
+    padding: 10px 14px 11px;
+    border-radius: var(--radius-control, 12px) var(--radius-control, 12px) 0 0;
+  }
+
+  .tab[data-active="true"]::before {
+    top: auto;
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    width: auto;
+    height: 2px;
+  }
+
+  /* The horizontal scrollport clips outside outlines — draw the ring
+     inside the tab's border box instead. */
+  .tab:focus-visible {
+    outline-offset: -2px;
+  }
+
+  .panelGrid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tab,
+  .tabIcon {
+    transition: none;
+  }
+}

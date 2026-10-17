@@ -1,0 +1,154 @@
+.section {
+  padding: 128px 0;
+  font-family: var(--font-sans);
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 72px;
+  align-items: center;
+  padding: 72px 0;
+}
+
+.row:first-child {
+  padding-top: 0;
+}
+
+.row:last-child {
+  padding-bottom: 0;
+}
+
+.row .rowTitle {
+  margin: 0 0 14px;
+  font-size: clamp(1.5rem, 2.4vw, 1.8rem);
+  font-weight: 520;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--text);
+}
+
+.rowText {
+  margin: 0;
+  max-width: 44ch;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--content-text, var(--muted));
+}
+
+.points {
+  display: flex;
+  gap: 26px;
+  margin-top: 30px;
+}
+
+.point {
+  flex: 1;
+  min-width: 0;
+}
+
+.pointIcon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  margin-bottom: 10px;
+  color: var(--accent-text, var(--accent));
+}
+
+.pointIcon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.pointTitle {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.pointText {
+  display: block;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.mediaCell {
+  min-width: 0;
+}
+
+/* The vignette sits flat on the page — a hairline-ruled document region,
+   not an elevated card. The product frame is the page's only elevated
+   surface; boxing every media cell reads as container clutter. */
+.vig {
+  min-width: 0;
+}
+
+.vigHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 0 12px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.vigMeta {
+  margin-left: auto;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.vigBody {
+  min-width: 0;
+}
+
+/* Once-only entrance: media rises 12px, copy follows at +80ms. Hidden
+   only where scripting + full motion can undo it. */
+@media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+  .mediaCell {
+    transition:
+      opacity 560ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 560ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .copy {
+    transition:
+      opacity 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 80ms,
+      transform 560ms cubic-bezier(0.2, 0.7, 0.2, 1) 80ms;
+  }
+
+  .row[data-reveal="pending"] .mediaCell,
+  .row[data-reveal="pending"] .copy {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@media (max-width: 900px) {
+  .section {
+    padding: 80px 0;
+  }
+
+  .row {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  /* Vignette below the copy on small screens. */
+  .mediaCell {
+    order: 2 !important;
+  }
+}

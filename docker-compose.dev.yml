@@ -1,0 +1,108 @@
+# Fully containerized development environment for supastack — the compose
+# counterpart to docker-compose.yml (which provides postgres + MinIO for
+# host-side development, plus the production-image `app` profile).
+#
+# Usage:
+#   docker compose -f docker-compose.dev.yml up -d postgres
+#   docker compose -f docker-compose.dev.yml --profile migrate run --rm -T migrate
+#   docker compose -f docker-compose.dev.yml up -d dev
+#   # Run the bounded /api/health poll from docs/agent-setup.md.
+#   docker compose -f docker-compose.dev.yml logs --tail=100 dev  # failure diagnostics
+#   docker compose -f docker-compose.dev.yml down           # stop (-v drops data)
+#
+# Podman: the same commands work via `podman compose` once a compose provider
+# is configured — either `podman-compose`, or the docker-compose binary with
+# `DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock` (enable the socket
+# first: `systemctl --user enable --now podman.socket`). On SELinux hosts
+# (Fedora/RHEL) append `:z` to the `.:/app` bind mounts below. Rootless podman
+# is fine — only the high port 3000 is published.
+#
+# Environment precedence (verified, not assumed):
+#   compose `environment:`  >  compose `env_file` (.env)  >  mounted .env files
+# Next.js loads apps/web/.env.local only into variables that are NOT already
+# set in the process environment, and `packages/db/drizzle.config.ts` loads
+# the root .env through `process.loadEnvFile`, which never overrides set vars.
+# So the `environment:` DATABASE_URL below always wins — inside a container,
+# `localhost:5432` from .env/.env.local would point at the container itself.
+# `env_file: .env` is required: it carries the secrets generated in Phase 1 of
+# docs/agent-setup.md. If .env is missing, compose fails before starting.
+#
+# node_modules caveat: the bind mount shares node_modules between host and
+# container. Running `pnpm install` on the host after the container installed
+# (or vice versa) mixes platform binaries — pick one side and reinstall
+# cleanly when switching. The pnpm store lives in a named volume so container
+# reinstalls stay fast.
+#
+# Both compose files share the default project name and the `postgres-data`
+# volume, so their postgres containers are the same one — run one stack at a
+# time, or pass `-p <name>` to keep them apart.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: supastack
+      POSTGRES_PASSWORD: supastack
+      POSTGRES_DB: supastack
+    # Intentionally no `ports:` — reachable only on the compose network as
+    # `postgres:5432`. Host-side tooling uses docker-compose.yml's postgres,
+    # which does publish 5432.
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U supastack"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  dev:
+    image: node:22-bookworm-slim # glibc, not musl — avoids pnpm/native-dep edge cases
+    working_dir: /app
+    env_file: .env
+    environment:
+      APP_ENV: local
+      DATABASE_URL: postgres://supastack:supastack@postgres:5432/supastack
+      HOSTNAME: 0.0.0.0 # bind outside the container loopback (next dev default is already 0.0.0.0)
+      COREPACK_ENABLE_DOWNLOAD_PROMPT: "0" # never block on the pnpm@11.19.0 download
+      # Uncomment if host file edits stop triggering reloads (common with
+      # Docker Desktop bind mounts on macOS/Windows):
+      # WATCHPACK_POLLING: "true"
+    volumes:
+      - .:/app
+      - pnpm-store:/root/.local/share/pnpm/store
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "corepack enable && corepack pnpm install --frozen-lockfile && exec
+      corepack pnpm --filter @supastack/web dev"
+    stdin_open: true
+    tty: true
+
+  # Run migrations after starting Postgres and before starting `dev`; this
+  # avoids concurrent installs into the shared bind-mounted node_modules.
+  # Compose waits for healthy Postgres before running this one-shot service:
+  #   docker compose -f docker-compose.dev.yml --profile migrate run --rm -T migrate
+  #   (-T skips TTY allocation so non-interactive shells don't fail.)
+  migrate:
+    image: node:22-bookworm-slim
+    working_dir: /app
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://supastack:supastack@postgres:5432/supastack
+      COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+    volumes:
+      - .:/app
+      - pnpm-store:/root/.local/share/pnpm/store
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "corepack enable && corepack pnpm install --frozen-lockfile &&
+      corepack pnpm --filter @supastack/db db:migrate"
+    profiles:
+      - migrate
+
+volumes:
+  postgres-data:
+  pnpm-store:

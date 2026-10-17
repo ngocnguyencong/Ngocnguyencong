@@ -1,0 +1,86 @@
+.section {
+  display: grid;
+  gap: 18px;
+  max-width: var(--max, 1200px);
+  margin: 0 auto;
+  padding: 28px var(--gutter, 20px);
+  justify-items: center;
+}
+
+.label {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px clamp(24px, 5vw, 56px);
+  color: var(--muted);
+}
+
+/* Logos render muted by default and lift on hover. */
+.row > * {
+  opacity: 0.72;
+  transition:
+    opacity 150ms,
+    color 150ms;
+}
+
+.row > *:hover {
+  opacity: 1;
+  color: var(--text);
+}
+
+.row svg,
+.row img {
+  height: 22px;
+  width: auto;
+  display: block;
+}
+
+/* Marquee variant — a duplicated track translates -50% for a seamless
+   loop, dissolves at the edges, and pauses under the pointer. */
+.marquee {
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent);
+}
+
+.marqueeTrack {
+  display: flex;
+  width: max-content;
+  animation: logoMarquee 36s linear infinite;
+}
+
+.marqueeTrack .row {
+  flex: none;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  padding-right: clamp(24px, 5vw, 56px);
+}
+
+.marquee:hover .marqueeTrack {
+  animation-play-state: paused;
+}
+
+@keyframes logoMarquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marqueeTrack {
+    animation: none;
+  }
+
+  /* Static strip — the aria-hidden loop copy would otherwise peek in. */
+  .marqueeTrack .row[aria-hidden] {
+    display: none;
+  }
+}

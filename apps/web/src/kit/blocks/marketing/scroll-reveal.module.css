@@ -1,0 +1,19 @@
+/* ScrollReveal — pending state hides only where it can be undone:
+   scripting enabled (JS will flip data-reveal) + full motion allowed.
+   Every other visitor gets the content, static. */
+
+@media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+  .reveal {
+    transition:
+      opacity 640ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1)) var(--reveal-delay, 0ms),
+      transform 640ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1)) var(--reveal-delay, 0ms),
+      filter 640ms var(--ease, cubic-bezier(0.16, 1, 0.3, 1)) var(--reveal-delay, 0ms);
+  }
+
+  .reveal[data-reveal="pending"] {
+    filter: blur(3px);
+    opacity: 0;
+    transform: translateY(18px);
+    will-change: opacity, transform, filter;
+  }
+}

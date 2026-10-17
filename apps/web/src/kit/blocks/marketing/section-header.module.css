@@ -1,0 +1,53 @@
+.header {
+  display: grid;
+  gap: 12px;
+  max-width: 42rem;
+  margin: 0 auto var(--space-room, 32px);
+  padding: 0 var(--gutter, 20px);
+  text-align: center;
+}
+
+.header[data-align="left"] {
+  margin: 0 0 var(--space-room, 32px);
+  padding: 0;
+  text-align: left;
+  justify-items: start;
+}
+
+/* Editorial eyebrow: short accent rule + serif italic — not a bordered mono chip. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--font-serif, var(--font-sans));
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--accent-text, var(--accent));
+}
+
+.eyebrow::before {
+  content: "";
+  width: 22px;
+  height: 1.5px;
+  background: var(--accent);
+  opacity: 0.7;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  font-weight: 500;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.sub {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--muted);
+  text-wrap: pretty;
+}

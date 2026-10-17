@@ -1,0 +1,150 @@
+.section {
+  display: grid;
+  gap: 32px;
+  padding: 64px 0;
+}
+
+.header {
+  display: grid;
+  gap: 8px;
+  max-width: 640px;
+}
+
+.heading {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.sub {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  overflow: hidden;
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card, 16px);
+  transition:
+    border-color var(--motion-feedback, 120ms) var(--ease),
+    transform var(--motion-enter, 180ms) var(--ease);
+}
+
+.card:has(.cardLink:hover) {
+  border-color: var(--border-strong);
+}
+
+.cardLink {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  background: var(--section);
+  border-bottom: 1px solid var(--border);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.monogram {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--accent-text, var(--accent));
+}
+
+.badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-radius: 999px;
+}
+
+.body {
+  display: grid;
+  gap: 8px;
+  padding: 16px 20px 20px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.name {
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.price {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--accent-text, var(--accent));
+  white-space: nowrap;
+}
+
+.description {
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-text, var(--accent));
+}
+
+@media (hover: hover) {
+  .card:has(.cardLink:hover) {
+    transform: translateY(-2px);
+  }
+}
+.card:has(.cardLink:focus-visible) {
+  border-color: var(--focus-ring, var(--accent));
+}
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+  .card:has(.cardLink:hover) {
+    transform: none;
+  }
+}

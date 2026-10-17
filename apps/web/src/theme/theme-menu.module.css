@@ -1,0 +1,213 @@
+/* Compact color-pack menu — same popover grammar as language-switcher. */
+.root {
+  position: relative;
+}
+
+.trigger {
+  align-items: center;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.8125rem;
+  gap: 8px;
+  height: 42px;
+  list-style: none;
+  padding: 0 12px;
+  transition:
+    border-color 180ms,
+    color 180ms,
+    background 180ms;
+  white-space: nowrap;
+}
+
+.trigger::-webkit-details-marker {
+  display: none;
+}
+
+.trigger::marker {
+  content: "";
+}
+
+.trigger:hover,
+.root[open] .trigger {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.glyph {
+  display: block;
+}
+
+.chevron {
+  display: block;
+  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.root[open] .chevron {
+  transform: rotate(180deg);
+}
+
+.popover {
+  backdrop-filter: blur(18px);
+  background: color-mix(in srgb, var(--section, #0a0a0a) 90%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  box-shadow:
+    0 1px 2px color-mix(in srgb, var(--page) 35%, transparent),
+    0 14px 36px color-mix(in srgb, var(--page) 60%, transparent),
+    inset 0 1px 0 color-mix(in srgb, var(--text) 8%, transparent);
+  list-style: none;
+  margin: 0;
+  max-height: min(420px, 70vh);
+  min-width: 190px;
+  overflow-y: auto;
+  padding: 6px;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 60;
+}
+
+.root[data-align="start"] .popover {
+  left: 0;
+  right: auto;
+}
+
+.root[data-side="top"] .popover {
+  bottom: calc(100% + 8px);
+  top: auto;
+}
+
+.popover li {
+  margin: 0;
+}
+
+.popover button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: calc(var(--radius-control) - 5px);
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  font-size: 0.8125rem;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 10px;
+  text-align: start;
+  transition:
+    background 140ms,
+    color 140ms;
+  width: 100%;
+}
+
+.popover button:hover {
+  background: var(--hover-fill, color-mix(in srgb, var(--text) 8%, transparent));
+  color: var(--text);
+}
+
+.popover button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.popover button[aria-pressed="true"] {
+  color: var(--text);
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+}
+
+.swatch {
+  border-radius: 50%;
+  border-style: solid;
+  border-width: 1px;
+  display: grid;
+  flex: 0 0 auto;
+  height: 18px;
+  place-items: center;
+  width: 18px;
+}
+
+.swatch i {
+  border-radius: 50%;
+  display: block;
+  height: 8px;
+  width: 8px;
+}
+
+.check {
+  color: var(--accent-text, var(--accent));
+  flex: 0 0 auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .root[open] .popover {
+    animation: themePopoverIn 170ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .root[data-side="top"][open] .popover {
+    animation-name: themePopoverInUp;
+  }
+  .root[data-closing] .popover {
+    animation: themePopoverOut 130ms cubic-bezier(0.4, 0, 0.7, 0.2) forwards;
+  }
+  .root[data-side="top"][data-closing] .popover {
+    animation-name: themePopoverOutDown;
+  }
+}
+
+@keyframes themePopoverIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes themePopoverOut {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.985);
+  }
+}
+
+@keyframes themePopoverInUp {
+  from {
+    opacity: 0;
+    transform: translateY(5px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes themePopoverOutDown {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(4px) scale(0.985);
+  }
+}

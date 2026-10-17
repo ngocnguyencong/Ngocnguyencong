@@ -1,0 +1,146 @@
+# supastack
+
+> Modular SaaS starter — Next.js web app, Expo mobile app, Tauri desktop
+> shell, shared TypeScript packages for auth, billing, AI, jobs, email,
+> storage, and observability. Everything in this file is the agent map:
+> start at AGENTS.md for boundaries, then docs/agent-setup.md to run it.
+
+This file is the agent entry map for the repository. Every link target is a
+repo-relative path into the monorepo — read them before editing. Separately,
+the product ships its own in-app documentation: localized guide content lives
+in `apps/web/src/resources/` and renders under the web app's `/docs` routes;
+the files below are the maintainer- and agent-facing sources.
+
+Important notes for agents:
+
+- Server secrets stay server-only — never `NEXT_PUBLIC_`/`EXPO_PUBLIC_`-prefixed,
+  never committed, always generated — `scripts/setup-env.mjs` creates local
+  secrets (required formats documented in `docs/agent-setup.md` Phase 1 and
+  marked `replace-with-*` in `.env.example`).
+- Every user-owned record is scoped by `workspaceId` — never write a
+  cross-workspace query, and never let a model or caller pick the workspace.
+- No merges, pushes, deploys, destructive operations, or paid provider calls
+  without the user's explicit consent for that specific action — local changes
+  only unless told otherwise.
+- If a setup or deploy step fails twice, stop and report the command and its
+  output — never disable a security feature (auth, RLS, rate limits) to silence
+  an error.
+
+## Start here
+
+- [AGENTS.md](AGENTS.md): the agent contract — non-negotiable boundaries, workspace scoping, theming axes, dev commands
+- [README.md](README.md): human quickstart (clone → copy `.env.example` → `corepack pnpm install` → `corepack pnpm --filter @supastack/web dev`)
+- [PRODUCT.md](PRODUCT.md): what the kit is and isn't — users, positioning, confirmed capabilities
+- [.ai/PROJECT_CONTEXT.md](.ai/PROJECT_CONTEXT.md): cross-session agent memory — read before code changes; files carry `.ai/` mirror docs — keep them in sync when you edit
+- [.env.example](.env.example): the complete environment inventory — never invent variable names that are not in this file
+
+## Agent setup & deploy
+
+- [docs/agent-setup.md](docs/agent-setup.md): THE runbook — containerized local setup (Docker/Podman), VPS deploy via Coolify or plain Docker, verification checkpoints
+- [scripts/setup-env.mjs](scripts/setup-env.mjs): noninteractive env bootstrap; preserves valid secrets, rejects conflicts, and prints safe status (`--check` validates without writes)
+- [scripts/setup.mjs](scripts/setup.mjs): interactive `pnpm setup` wizard — preflight checks, env bootstrap via `scripts/setup-env.mjs`, optional dependency install and database migrations; `--check`/`--dry-run` validate without writes, `--yes` and non-TTY shells take safe defaults
+- [docker-compose.dev.yml](docker-compose.dev.yml): fully containerized dev environment (Postgres + dev container)
+- [docker-compose.yml](docker-compose.yml): local Postgres, optional MinIO (`storage` profile), production `app` profile
+- [Dockerfile](Dockerfile): production image — Next.js standalone on port 8080, forces `APP_ENV=production`
+- [docs/deployment.md](docs/deployment.md): production topology, env groups, post-deploy checks
+- [docs/vps-coolify.md](docs/vps-coolify.md): Coolify walkthrough — build pack, healthcheck, scheduler tick task
+- [prompts/agent-setup.md](prompts/agent-setup.md): the pasteable prompt that drives this whole flow
+
+## Security protocols — NON-NEGOTIABLE
+
+- [AGENTS.md](AGENTS.md): never merge, push, deploy, or run paid/billing-affecting actions without the user's explicit consent for that specific action — work stays local unless told otherwise
+- [docs/agent-security.md](docs/agent-security.md): authentication and workspace checks, PostgREST exposure and RLS checks, redacted logs, and deployment acceptance evidence
+- [packages/db/src/schema.ts](packages/db/src/schema.ts): every user-owned record carries `workspaceId` (FK to `workspace`, cascade delete) — never write a cross-workspace query; `audit_event` allows a null workspace only for platform-level events
+- [apps/web/src/workspace-tools.ts](apps/web/src/workspace-tools.ts): callers inject `ToolContext` (`workspaceId`/`userId`/scopes, defined in `packages/agents/src/tools.ts`) — the model can never choose a workspace
+- [.env.example](.env.example): provider secrets are server-only — never expose them through `NEXT_PUBLIC_`/`EXPO_PUBLIC_` vars; generate `AUTH_SECRET` and `SCHEDULER_TICK_SECRET` with `openssl rand -hex 32`, `CREDENTIAL_ENCRYPTION_KEY` with `openssl rand -base64 32`; `.env*` files are gitignored (only `*.example` templates ship)
+- [packages/auth/src/index.ts](packages/auth/src/index.ts): `AUTH_PROVIDER` selects Better Auth by default (full feature set — passkeys, TOTP/2FA, magic link, impersonation) or the Auth.js alternative; `EARLY_ACCESS_INVITE_ONLY` gates sign-up behind invite codes and `ADMIN_EMAILS` bootstraps platform admins
+- [scripts/supabase-doctor.mjs](scripts/supabase-doctor.mjs): `pnpm supabase:doctor` audits SSL, pooler mode vs prepared statements, pending migrations, and public-schema tables PostgREST could expose (RLS disabled or anon/authenticated grants) with exact fix SQL — `--fix-rls` applies them in one transaction
+- [apps/web/src/rate-limit-runtime.ts](apps/web/src/rate-limit-runtime.ts): fixed-window rate limiter — `RATE_LIMIT_STORE` picks shared Postgres `rate_limit_bucket` rows (production default, `packages/db/src/rate-limit-store.ts`) or per-process memory; `TRUSTED_PROXY_COUNT` (0–10) is the number of controlled `x-forwarded-for` hops used for client-IP bucket keys
+- [packages/observability/src/index.ts](packages/observability/src/index.ts): use static logger messages with structured context; `redactSensitive` scrubs sensitive context keys, not arbitrary message text. Never log raw request payloads, `.env` contents, or connection strings; `ALERT_WEBHOOK_URL` receives failure alerts, while `audit_event`, `webhook_event` (inbound dedup), `webhook_delivery`, `task_run`, and `job_schedule` persist in Postgres (see `packages/db/src/schema.ts`)
+- [apps/web/app/api/billing/webhook/route.ts](apps/web/app/api/billing/webhook/route.ts): billing webhook receivers verify provider signatures via `verifySignedWebhook` in `packages/billing` — Stripe uses this route, other providers live under `apps/web/app/api/billing/webhook/<provider>/`
+- [apps/web/src/webhooks.ts](apps/web/src/webhooks.ts): outbound webhooks are SSRF-guarded — `isPubliclyRoutableHost` rejects private/link-local/CGNAT/NAT64/IPv4-in-IPv6 hosts and `.internal`/`.local`/`.corp` names, HTTPS-only with no embedded credentials in production; DNS is re-resolved at delivery (anti-rebinding) and payloads are HMAC-signed via `x-webhook-signature` (`t=…,v1=…`)
+- [apps/web/src/request-body.ts](apps/web/src/request-body.ts): bounded request intake — 64 KB JSON / 1 MB webhook / 2.5 MB image caps with content-length pre-checks plus the `createConcurrentRequestGate` admission gate; [rate-limit-route.ts](apps/web/src/rate-limit-route.ts) adds `createInFlightRequestGate` (`unknownIpGate`) and strips caller-supplied `x-authenticated-client-ip` so only the verified IP reaches auth and rate limiting
+- [packages/auth/src/index.ts](packages/auth/src/index.ts): `trustedOrigins` are exact-match — no wildcards, non-local HTTPS only in production, fed by `MOBILE_ALLOWED_ORIGINS`; dynamic custom-domain origins are revalidated through the same policy
+- [apps/web/src/api-key-auth.ts](apps/web/src/api-key-auth.ts): `sk_` API keys are stored hashed, scope-filtered, bearer-only; [the MCP endpoint](apps/web/app/api/mcp/route.ts) accepts POST + `Authorization: Bearer` only — no cookie sessions, 401 + `WWW-Authenticate`, GET/DELETE → 405; agent runs have no public endpoint (they would bypass the ModelRouter budget)
+- [apps/web/src/captcha.ts](apps/web/src/captcha.ts): Turnstile is opt-in (`CAPTCHA_PROVIDER`, default `off`); `TURNSTILE_SECRET_KEY` stays server-only for siteverify while `NEXT_PUBLIC_TURNSTILE_SITE_KEY` is the public site key
+- [apps/web/src/public-ai-runtime.ts](apps/web/src/public-ai-runtime.ts): `PUBLIC_AI_DAILY_BUDGET_MICROUNITS` defaults to `0` — public AI endpoints stay disabled, reservations throw `PublicAiBudgetExceededError` before any provider call; spend settles against the `platform_ai_spend` ledger
+- [packages/email/src/index.ts](packages/email/src/index.ts): transactional senders reject `category: "outreach"` — transactional mail and outreach stay separate; there is no campaign capability
+- [apps/web/app/api/internal/scheduler-tick/route.ts](apps/web/app/api/internal/scheduler-tick/route.ts): POST requires the `x-scheduler-key` header to equal `SCHEDULER_TICK_SECRET` (timing-safe compare → 401) and 404s while the secret is unset; due schedules are claimed `FOR UPDATE SKIP LOCKED` in `packages/jobs/src/drizzle-scheduler.ts`
+- [AGENTS.md](AGENTS.md): demo surfaces stay neutral — no real testimonials, customer marks, trust counts, or production marketing copy in source, translations, assets, or shipped docs
+
+## Guides
+
+- [docs/adopt-patterns.md](docs/adopt-patterns.md): adopt individual modules into an existing stack
+- [docs/aws-ses.md](docs/aws-ses.md): send transactional email through AWS SES (SDK or IAM SMTP)
+- [docs/custom-billing-adapter.md](docs/custom-billing-adapter.md): write a new billing provider adapter
+- [docs/desktop-updates.md](docs/desktop-updates.md): signed desktop updates — key generation, endpoint hosting, build-time `plugins.updater` config injection, and launch-at-login
+- [docs/github-auth-setup.md](docs/github-auth-setup.md): GitHub sign-in and account linking
+- [docs/mobile-store-submission.md](docs/mobile-store-submission.md): App Store / Play submission path
+- [docs/production-ai-runtime.md](docs/production-ai-runtime.md): durable Trigger.dev + ModelRouter production AI path
+- [docs/real-provider-smoke.md](docs/real-provider-smoke.md): the opt-in real-provider acceptance smoke
+- [docs/upgrading.md](docs/upgrading.md): upgrade a fork between kit revisions
+
+The product's own docs surface — localized user-facing guides — lives in
+[apps/web/src/resources](apps/web/src/resources) and renders under `/docs`
+(plus locale-prefixed variants) via the `app/[locale]/docs/[[...slug]]`
+catch-all.
+
+## Agent prompts
+
+- [prompts/README.md](prompts/README.md): how the prompt library works — pick a design style, pick blocks, paste a prompt
+- [prompts/agent-setup.md](prompts/agent-setup.md): zero-to-running + deploy, the paste-first prompt
+- [prompts/pick-a-style.md](prompts/pick-a-style.md): apply a design style across the whole product
+- [prompts/new-landing-page.md](prompts/new-landing-page.md): scaffold a marketing/landing page from kit blocks
+- [prompts/new-app-screen.md](prompts/new-app-screen.md): scaffold an in-app screen
+- [prompts/restyle-product.md](prompts/restyle-product.md): re-theme a page along the theme axes
+- [prompts/ui-audit.md](prompts/ui-audit.md): run a structured UI audit
+
+## Architecture map
+
+Apps:
+
+- [apps/web](apps/web): Next.js App Router — the whole product surface (marketing, auth, workspaces, billing, AI chat, admin) plus the BFF API (`/api/v1`, `/api/mcp`, `/api/billing`, `/api/internal`) that mobile and desktop consume
+- [apps/mobile](apps/mobile): Expo app — native auth and reference flows over the web app's API
+- [apps/desktop](apps/desktop): Tauri webview shell over the web app — Rust owns window/tray/hotkey/single-instance only; it never forks product UI
+- [apps/docs](apps/docs): standalone setup-docs site (dev port 3001)
+
+Packages (provider contracts selected by `*_PROVIDER` env vars — see `.env.example`):
+
+- [packages/agents](packages/agents): agent-framework adapters (ai-sdk, mastra, langgraph, openai-agents) + the shared tool registry
+- [packages/ai](packages/ai): AI providers (fake/openai/anthropic/openai-compatible/openrouter), the ModelRouter, structured output, pricing contracts
+- [packages/api](packages/api): `/api/v1` BFF contract — zod schemas + OpenAPI registry shared by web and mobile clients
+- [packages/auth](packages/auth): auth adapters — Better Auth (default) and Auth.js v5, MFA/passkeys, Expo helpers
+- [packages/billing](packages/billing): billing adapters (local, stripe, lemonsqueezy, creem, polar, whop, paddle, dodo, paypal) over one entitlement ledger
+- [packages/config](packages/config): env parsing/validation — every supported variable is declared here and documented in `.env.example`
+- [packages/db](packages/db): Drizzle schema + Postgres client, workspace-scoped repositories, rate-limit/audit/spend stores
+- [packages/design-tokens](packages/design-tokens): theme token contracts shared across surfaces
+- [packages/email](packages/email): transactional email adapters + React Email templates — transactional only, no outreach
+- [packages/i18n](packages/i18n): supported-locale constants and serializable copy contracts
+- [packages/jobs](packages/jobs): JobRunner contract (enqueue/status/cancel) + the durable Drizzle scheduler (`claimDueSchedules`)
+- [packages/observability](packages/observability): structured logging, error capture, secret redaction, the `ALERT_WEBHOOK_URL` alerter
+- [packages/storage](packages/storage): object storage — memory (default) or S3-compatible (Supabase Storage, MinIO)
+- [packages/ui-native](packages/ui-native): shared native UI components for the Expo app
+- [packages/ui-web](packages/ui-web): shared web UI components
+
+## Testing & verification
+
+- `corepack pnpm check:local` — credential-free gate: lint, non-desktop typecheck, unit tests, format check
+- `corepack pnpm verify:local` — full local gate: `check:local` + production build + both Playwright suites
+- `corepack pnpm test` — deterministic vitest suite (fake/local adapters only, no billable calls)
+- `corepack pnpm smoke:providers` — opt-in real-provider smoke; refuses without `RUN_REAL_PROVIDER_SMOKE=true` and real keys
+- `corepack pnpm jobs:tick` — fire one authenticated scheduler tick at a running app (needs `SCHEDULER_TICK_SECRET`)
+- `corepack pnpm supabase:doctor` — Supabase audit: SSL, pooler, pending migrations, RLS exposure
+- [tests](tests): repo-level vitest guards (the `llms.txt` link check, `.ai` mirror scoping, dependency/container audits) plus `e2e/` and `e2e-production/` Playwright specs and `smoke/` real-provider checks
+
+## Optional
+
+- [LICENSE.md](LICENSE.md): license grant — unlimited end products, no codebase redistribution, per-developer seats
+- [.devin/wiki.json](.devin/wiki.json): DeepWiki steering — architecture notes and planned wiki pages
+- [docs/design](docs/design): internal design/theme planning docs — not a product API surface
+- [docs/superpowers](docs/superpowers): internal plans/specs archive — historical context only
+- [.ai](.ai): mirror docs for shipped files — update the matching `.ai/` mirror whenever you change a file
+- [.env.smoke.example](.env.smoke.example): env template for the opt-in real-provider smoke
+- [playwright.config.ts](playwright.config.ts): local browser suite config (defaults to port 3100; `PLAYWRIGHT_PORT` overrides)
+- [playwright.production.config.ts](playwright.production.config.ts): production-interface browser suite config
+- [scripts/subrepos.json](scripts/subrepos.json): declared sub-repo sync targets — always edit in this monorepo and push via `pnpm sync:subrepos`
+- [turbo.json](turbo.json) / [pnpm-workspace.yaml](pnpm-workspace.yaml): task graph and workspace layout

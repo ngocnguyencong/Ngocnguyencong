@@ -1,0 +1,170 @@
+.section {
+  padding: 128px 0;
+  font-family: var(--font-sans);
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.wrap .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.wrap .eyebrow::before {
+  content: "";
+  width: 16px;
+  height: 1px;
+  flex: none;
+  background: var(--accent);
+}
+
+.wrap .title {
+  margin: 0 0 16px;
+  max-width: 640px;
+  font-size: clamp(2rem, 3.6vw, 2.75rem);
+  font-weight: 520;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  color: var(--text);
+}
+
+.wrap .sub {
+  margin: 0 0 56px;
+  max-width: 540px;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--content-text, var(--muted));
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Column heads read as mono spec labels — the table is a comparison
+   sheet, not a brochure. */
+.table th {
+  padding: 0 32px 14px 0;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: left;
+}
+
+.table th:first-child {
+  width: 24%;
+}
+
+.table td {
+  padding: 16px 32px 16px 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  vertical-align: top;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 1px solid var(--border);
+}
+
+.table td.dim {
+  width: 24%;
+  padding-top: 19px;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.them {
+  color: var(--muted);
+}
+
+.us {
+  font-weight: 550;
+  color: var(--text);
+}
+
+.check {
+  display: inline-block;
+  margin-right: 9px;
+  color: var(--accent-text, var(--accent));
+  vertical-align: -2px;
+}
+
+/* Stacked definition rows on narrow screens. */
+@media (max-width: 640px) {
+  .section {
+    padding: 80px 0;
+  }
+
+  .table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .table,
+  .table tbody,
+  .table tr,
+  .table td {
+    display: block;
+    width: auto;
+  }
+
+  .table tr {
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .table tbody tr:last-child {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .table td {
+    padding: 0;
+    border-top: 0;
+  }
+
+  .table td.dim {
+    padding-top: 0;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    font-weight: 550;
+    color: var(--text);
+  }
+
+  .them,
+  .us {
+    padding-left: 0;
+  }
+
+  .them::before,
+  .us::before {
+    content: attr(data-col);
+    display: block;
+    margin: 10px 0 4px;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+}

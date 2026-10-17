@@ -1,0 +1,82 @@
+.card {
+  display: grid;
+  gap: 14px;
+  padding: 20px;
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card, 16px);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.delta[data-tone="positive"] {
+  /* --telemetry/-soft are globals.css tokens, not catalog tokens — fall back. */
+  color: var(--telemetry, var(--accent));
+  background: var(--telemetry-soft, color-mix(in srgb, var(--accent) 12%, transparent));
+}
+
+.delta[data-tone="negative"] {
+  color: var(--danger, var(--muted));
+  background: color-mix(in srgb, var(--danger, var(--muted)) 14%, transparent);
+}
+
+.delta[data-tone="neutral"] {
+  color: var(--muted);
+  background: color-mix(in srgb, var(--muted) 14%, transparent);
+}
+
+.main {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.value {
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.spark {
+  flex: none;
+  width: 96px;
+  height: 32px;
+  overflow: visible;
+}
+
+.sparkLine {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sparkDot {
+  fill: var(--accent);
+}

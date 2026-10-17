@@ -1,0 +1,77 @@
+{
+  "repos": [
+    {
+      "name": "supastack-web",
+      "app": "apps/web",
+      "checkout": "../supastack-web",
+      "remoteEnv": "SUBREPO_WEB_REMOTE",
+      "extraPaths": [
+        ".dockerignore",
+        "Dockerfile",
+        "docker-compose.yml",
+        "docker-compose.dev.yml",
+        "scripts/scheduler-tick.mjs",
+        "scripts/setup-env.mjs",
+        "scripts/setup.mjs",
+        "scripts/run-turbo.mjs",
+        "scripts/supabase-doctor.mjs",
+        "scripts/supabase-provision.mjs",
+        "docs/agent-security.md",
+        "docs/agent-setup.md",
+        "docs/adopt-patterns.md",
+        "docs/custom-billing-adapter.md",
+        "docs/deployment.md",
+        "docs/github-auth-setup.md",
+        "docs/mobile-store-submission.md",
+        "docs/production-ai-runtime.md",
+        "docs/real-provider-smoke.md",
+        "docs/upgrading.md",
+        "docs/vps-coolify.md",
+        "prompts"
+      ],
+      "scripts": {
+        "build": "node scripts/run-turbo.mjs run build",
+        "dev": "turbo run dev --parallel",
+        "setup": "node scripts/setup.mjs",
+        "supabase:doctor": "node scripts/supabase-doctor.mjs",
+        "supabase:provision": "node scripts/supabase-provision.mjs"
+      }
+    },
+    {
+      "name": "supastack-mobile",
+      "app": "apps/mobile",
+      "checkout": "../supastack-mobile",
+      "remoteEnv": "SUBREPO_MOBILE_REMOTE",
+      "extraPaths": [
+        "scripts/scheduler-tick.mjs",
+        "docs/agent-security.md",
+        "docs/adopt-patterns.md",
+        "docs/deployment.md",
+        "docs/mobile-store-submission.md",
+        "docs/upgrading.md"
+      ],
+      "scripts": {
+        "build": "pnpm --filter @supastack/mobile build",
+        "dev": "pnpm --filter @supastack/mobile start"
+      }
+    },
+    {
+      "name": "supastack-desktop",
+      "app": "apps/desktop",
+      "checkout": "../supastack-desktop",
+      "remoteEnv": "SUBREPO_DESKTOP_REMOTE",
+      "extraPaths": [
+        "scripts/scheduler-tick.mjs",
+        "docs/agent-security.md",
+        "docs/adopt-patterns.md",
+        "docs/deployment.md",
+        "docs/desktop-updates.md",
+        "docs/upgrading.md"
+      ],
+      "scripts": {
+        "build": "pnpm --filter @supastack/desktop build",
+        "dev": "pnpm --filter @supastack/desktop dev"
+      }
+    }
+  ]
+}

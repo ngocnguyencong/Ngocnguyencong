@@ -1,0 +1,66 @@
+/* Roadmap status groups. Sections join the .prose column + hairlines from
+   utility-page; selectors under .group keep (0,2,x) specificity above the
+   `.prose section …` defaults. */
+.items {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.item {
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--raised);
+}
+
+.itemHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.itemHead h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+}
+
+.status {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 550;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.status[data-status="shipped"] {
+  color: var(--success, var(--accent));
+}
+
+.status[data-status="in_progress"] {
+  color: var(--info, var(--accent));
+}
+
+.item p {
+  margin-top: 8px;
+}
+
+.cta {
+  margin: 8px auto 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+.cta a {
+  color: var(--accent-text, var(--accent));
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

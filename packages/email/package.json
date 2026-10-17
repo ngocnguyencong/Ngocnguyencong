@@ -1,0 +1,28 @@
+{
+  "name": "@supastack/email",
+  "version": "0.1.0",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit false --outDir dist --declaration",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sesv2": "3.1126.0",
+    "@opencoredev/email-sdk": "1.2.0",
+    "@react-email/components": "1.0.12",
+    "@react-email/render": "2.1.0",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "resend": "6.26.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.7",
+    "typescript": "catalog:"
+  }
+}

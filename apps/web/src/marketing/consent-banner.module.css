@@ -1,0 +1,95 @@
+.banner {
+  position: fixed;
+  right: var(--gutter);
+  bottom: var(--gutter);
+  z-index: 40;
+  display: grid;
+  gap: 10px;
+  max-width: min(24rem, calc(100vw - 2 * var(--gutter)));
+  padding: 18px 18px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--raised);
+  color: var(--text);
+}
+
+.banner p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.banner p:first-child {
+  color: var(--text);
+  font-weight: 550;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.actions button {
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color 180ms var(--ease),
+    border-color 180ms var(--ease),
+    transform 180ms var(--ease);
+}
+
+.actions button:first-child:hover {
+  background: var(--hover-fill, color-mix(in srgb, var(--text) 8%, transparent));
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.actions button:last-child {
+  border: 0;
+  background: var(--btn);
+  color: var(--btn-text);
+}
+
+.actions button:last-child:hover {
+  background: color-mix(in srgb, var(--btn) 88%, var(--page));
+  transform: translateY(-1px);
+}
+
+.actions button:active {
+  transform: translateY(0);
+}
+
+/* Footer "analytics preferences" — quiet text control matching footer links. */
+.preferences {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  text-align: start;
+  transition: color 200ms var(--ease);
+}
+
+.preferences:hover {
+  color: var(--text);
+}
+
+.preferences:focus-visible {
+  outline: 2px solid var(--border-strong, var(--text));
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner {
+    transition: none;
+  }
+}

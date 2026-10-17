@@ -1,0 +1,19 @@
+{
+  "name": "@supastack/supadata-cli",
+  "version": "0.1.0",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "private": true,
+  "description": "Command-line client for the supadata analytics REST API (sd_ site keys / sk_ workspace keys).",
+  "type": "module",
+  "bin": {
+    "sd": "./sd.mjs",
+    "supadata": "./sd.mjs"
+  },
+  "files": [
+    "sd.mjs",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,35 @@
+.skeleton {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-control, 12px);
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+/* Slow shimmer sweep — a faint text-tinted band crossing left to right. */
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--text) 14%, transparent),
+    transparent
+  );
+  animation: skeleton-shimmer 1.6s linear infinite;
+}
+
+@keyframes skeleton-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    content: none;
+    animation: none;
+  }
+}

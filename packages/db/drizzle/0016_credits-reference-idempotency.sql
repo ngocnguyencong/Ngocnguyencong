@@ -1,0 +1,2 @@
+CREATE UNIQUE INDEX "uq_credit_transaction_reference" ON "credit_transaction" USING btree ("workspace_id","kind","reference_id") WHERE "reference_id" IS NOT NULL;--> statement-breakpoint
+ALTER TABLE "credit_balance" ADD CONSTRAINT "credit_balance_nonnegative" CHECK ("balance" >= 0);

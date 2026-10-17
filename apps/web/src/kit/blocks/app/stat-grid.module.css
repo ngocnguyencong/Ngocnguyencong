@@ -1,0 +1,104 @@
+.wrap {
+  container-type: inline-size;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Known dashboard counts get deterministic rows — no orphan cards. */
+.grid[data-count="4"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid[data-count="6"] {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+@container (min-width: 31rem) {
+  .grid[data-count="6"] {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@container (min-width: 41rem) {
+  .grid[data-count="4"] {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@container (min-width: 62rem) {
+  .grid[data-count="6"] {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.card {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 20px;
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card, 16px);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.delta[data-tone="good"] {
+  color: var(--success, var(--accent));
+  background: var(--success-soft, color-mix(in srgb, var(--accent) 12%, transparent));
+}
+
+.delta[data-tone="bad"] {
+  color: var(--danger, var(--muted));
+  background: color-mix(in srgb, var(--danger, var(--muted)) 14%, transparent);
+}
+
+.delta[data-tone="flat"] {
+  color: var(--muted);
+  background: color-mix(in srgb, var(--muted) 14%, transparent);
+}
+
+.value {
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.hint {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--muted);
+}

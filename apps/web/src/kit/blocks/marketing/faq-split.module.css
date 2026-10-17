@@ -1,0 +1,134 @@
+.section {
+  padding: 128px 0;
+  font-family: var(--font-sans);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 5fr 7fr;
+  gap: 72px;
+  align-items: start;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.intro .title {
+  margin: 0 0 16px;
+  font-size: clamp(2rem, 3.6vw, 2.75rem);
+  font-weight: 520;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  color: var(--text);
+}
+
+.intro .sub {
+  margin: 0;
+  max-width: 42ch;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--content-text, var(--muted));
+}
+
+.list {
+  border-top: 1px solid var(--border);
+  /* Progressive enhancement: lets height/grid animations interpolate
+     keywords where the engine supports it. Harmless elsewhere. */
+  interpolate-size: allow-keywords;
+}
+
+.item {
+  border-bottom: 1px solid var(--border);
+}
+
+.item .question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 0;
+  font-size: 1.02rem;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  cursor: pointer;
+  list-style: none;
+}
+
+.item .question::-webkit-details-marker {
+  display: none;
+}
+
+.item .question:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.item .chevron {
+  flex-shrink: 0;
+  color: var(--muted);
+  transition: transform var(--motion-feedback, 120ms);
+}
+
+.item[open] .chevron {
+  transform: rotate(180deg);
+}
+
+/* Answer height animation via ::details-content — a closed <details>
+   never renders its children, so a transition on an inner wrapper can
+   never play; the pseudo-element stays in the tree and animates both
+   directions (content-visibility allow-discrete keeps it alive while
+   closing). interpolate-size (on .list) resolves the `auto` endpoint.
+   Where unsupported the answer simply appears — still correct. */
+.item::details-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition:
+    grid-template-rows var(--motion-disclosure-close, 160ms) var(--ease),
+    content-visibility var(--motion-disclosure-close, 160ms) allow-discrete;
+}
+
+.item[open]::details-content {
+  grid-template-rows: 1fr;
+  transition-duration: var(--motion-disclosure-open, 220ms);
+}
+
+.answerWrap {
+  display: grid;
+  grid-template-rows: 1fr;
+  min-height: 0;
+}
+
+.answerInner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.answerInner .answer {
+  margin: 0;
+  padding: 0 0 24px;
+  max-width: 52ch;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--content-text, var(--muted));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item::details-content,
+  .chevron {
+    transition: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .section {
+    padding: 80px 0;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}

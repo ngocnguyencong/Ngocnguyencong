@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Supastack</title>
+    <style>
+      body {
+        align-items: center;
+        background: #0a0a0a;
+        color: #929292;
+        display: flex;
+        flex-direction: column;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        gap: 16px;
+        inset: 0;
+        justify-content: center;
+        margin: 0;
+        min-height: 100vh;
+        padding: 24px;
+        position: fixed;
+        text-align: center;
+      }
+      h1 {
+        color: #e6e6e6;
+        font-size: 15px;
+        font-weight: 600;
+        margin: 0;
+      }
+      p {
+        font-size: 13px;
+        margin: 0;
+        max-width: 42ch;
+      }
+      button {
+        background: #d55f2a;
+        border: 0;
+        border-radius: 10px;
+        color: #fff;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 10px 22px;
+      }
+      [hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="title" hidden></h1>
+    <p id="message">
+      This demo shell loads your web app. Set SUPASTACK_APP_URL to point it elsewhere.
+    </p>
+    <button id="retry" type="button" hidden>Retry</button>
+    <script src="boot.js"></script>
+  </body>
+</html>

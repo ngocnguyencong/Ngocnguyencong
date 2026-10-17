@@ -1,0 +1,73 @@
+diff --git a/index.js b/index.js
+index 24e7db0cc55aa22d0f98358b73298067deb33b52..f08823d5ebc45f92e8fc329a7d55edc464916e39 100644
+--- a/index.js
++++ b/index.js
+@@ -1,42 +1,38 @@
+ 'use strict';
+ var token = '%[a-f0-9]{2}';
+-var singleMatcher = new RegExp('(' + token + ')|([^%]+?)', 'gi');
+ var multiMatcher = new RegExp('(' + token + ')+', 'gi');
+ 
+-function decodeComponents(components, split) {
+-	try {
+-		// Try to decode the entire string first
+-		return [decodeURIComponent(components.join(''))];
+-	} catch (err) {
+-		// Do nothing
+-	}
+-
+-	if (components.length === 1) {
+-		return components;
+-	}
+-
+-	split = split || 1;
+-
+-	// Split the array in 2 parts
+-	var left = components.slice(0, split);
+-	var right = components.slice(split);
+-
+-	return Array.prototype.concat.call([], decodeComponents(left), decodeComponents(right));
+-}
+-
+ function decode(input) {
+ 	try {
+ 		return decodeURIComponent(input);
+ 	} catch (err) {
+-		var tokens = input.match(singleMatcher) || [];
+-
+-		for (var i = 1; i < tokens.length; i++) {
+-			input = decodeComponents(tokens, i).join('');
+-
+-			tokens = input.match(singleMatcher) || [];
++		var output = '';
++		for (var position = 0; position < input.length;) {
++			var encoded = input.slice(position, position + 3);
++			if (!/^%[a-f0-9]{2}$/i.test(encoded)) {
++				output += input.charAt(position++);
++				continue;
++			}
++			var byte = parseInt(encoded.slice(1), 16);
++			var width = byte <= 0x7f ? 1 :
++				byte >= 0xc2 && byte <= 0xdf ? 2 :
++				byte >= 0xe0 && byte <= 0xef ? 3 :
++				byte >= 0xf0 && byte <= 0xf4 ? 4 : 0;
++			if (width) {
++				var candidate = input.slice(position, position + width * 3);
++				try {
++					if (candidate.length === width * 3 &&
++						/^(%[a-f0-9]{2})+$/i.test(candidate)) {
++						output += decodeURIComponent(candidate);
++						position += width * 3;
++						continue;
++					}
++				} catch (invalidUtf8) {}
++			}
++			output += encoded;
++			position += 3;
+ 		}
+-
+-		return input;
++		return output;
+ 	}
+ }
+ 

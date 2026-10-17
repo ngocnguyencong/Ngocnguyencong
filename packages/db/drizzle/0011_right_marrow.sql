@@ -1,0 +1,2 @@
+CREATE UNIQUE INDEX "idx_job_schedule_workspace_type" ON "job_schedule" USING btree ("workspace_id","type") WHERE "workspace_id" IS NOT NULL;--> statement-breakpoint
+CREATE INDEX "idx_job_schedule_next_run_at" ON "job_schedule" USING btree ("next_run_at") WHERE "enabled";

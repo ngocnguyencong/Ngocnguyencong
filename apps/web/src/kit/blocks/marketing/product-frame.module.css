@@ -1,0 +1,147 @@
+.frame {
+  overflow: hidden;
+  background: var(--raised);
+  border: 1px solid var(--border-strong);
+  border-radius: 16px;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.03),
+    0 20px 44px -28px rgba(0, 0, 0, 0.15);
+}
+
+/* ---------- browser chrome ---------- */
+
+.chrome {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 46px;
+  padding: 0 16px;
+  background: var(--section);
+  border-bottom: 1px solid var(--border);
+}
+
+.dots {
+  display: flex;
+  gap: 7px;
+}
+
+.dots i {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--border-strong);
+}
+
+.url {
+  margin: 0 auto;
+  padding: 5px 16px;
+  font-size: 0.76rem;
+  color: var(--muted);
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+/* ---------- app chrome ---------- */
+
+/* Flat app-window titlebar: brand on the left, a segmented tab strip, and
+   nothing else — no dots, no URL pill. */
+.appBar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 40px;
+  padding: 0 12px 0 14px;
+  background: var(--section);
+  border-bottom: 1px solid var(--border);
+}
+
+.appBrand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* Any mark/svg a caller drops into the brand slot is capped at titlebar size. */
+.appBrand svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.appTabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--page);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.appTabs::-webkit-scrollbar {
+  display: none;
+}
+
+.appTab {
+  flex: none;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 550;
+  line-height: 1.4;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.appTab[data-active="true"] {
+  color: var(--text);
+  background: var(--raised);
+  box-shadow: 0 0 0 1px var(--border-strong);
+}
+
+/* ---------- status strip ---------- */
+
+/* Thin app status bar pinned to the frame's bottom edge — a hairline over
+   the body, flat section fill, muted small print. */
+.statusBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 0 16px;
+  background: var(--section);
+  border-top: 1px solid var(--border);
+}
+
+.body {
+  min-width: 0;
+}
+
+@media (max-width: 560px) {
+  /* Narrow frames keep the brand + the active tab as a single chip. */
+  .appTabs {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    overflow: visible;
+  }
+
+  .appTab {
+    display: none;
+  }
+
+  .appTab[data-active="true"] {
+    display: inline-flex;
+  }
+}

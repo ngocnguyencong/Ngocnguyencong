@@ -1,0 +1,1 @@
+ALTER TABLE "job_schedule" ADD COLUMN "missed_runs" integer DEFAULT 0 NOT NULL;
